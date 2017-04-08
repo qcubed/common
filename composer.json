@@ -1,0 +1,21 @@
+{
+  "name": "qcubed/common",
+  "description": "The common files used by all components of the QCubed framework",
+  "keywords": ["php", "framework", "jquery"],
+  "homepage": "http://qcu.be/",
+  "type": "qcubed-library",
+  "license": "MIT",
+  "support": {
+      "issues": "https://github.com/qcubed/qcubed/issues",
+      "wiki": "https://github.com/qcubed/qcubed/wiki",
+      "source": "https://github.com/qcubed/common"
+  },
+  "require": {
+      "php": ">=5.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "QCubed": ""
+    }
+  }
+}
