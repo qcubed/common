@@ -1,34 +1,6 @@
 <?php
 
 
-	/**
-	 * Used when trying to access a table object which does not have a primary key defined on it
-	 */
-	class QUndefinedPrimaryKeyException extends QCallerException {
-		/**
-		 * Constructor method
-		 * @param string $strMessage
-		 */
-		public function __construct($strMessage) {
-			parent::__construct($strMessage, 2);
-		}
-	}
-
-
-
-
-	/**
-	 * Thrown when optimistic locking (in ORM Save() method) detects that DB data was updated
-	 */
-	class QOptimisticLockingException extends QCallerException {
-		/**
-		 * Constructor method
-		 * @param string $strClass
-		 */
-		public function __construct($strClass) {
-			parent::__construct(sprintf(QApplication::Translate('Optimistic Locking constraint when trying to update %s object.  To update anyway, call ->Save() with $blnForceUpdate set to true'), $strClass, 2));
-		}
-	}
 
 	/**
 	 * Thrown when the desired page is protected by ALLOW REMOTE ADMIN feature and the request does not qualify

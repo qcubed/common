@@ -1,6 +1,14 @@
 <?php
+/**
+ *
+ * Part of the QCubed PHP framework.
+ *
+ * @license MIT
+ *
+ */
 
 namespace QCubed;
+
 use QCubed\Exception\Caller;
 
 /**
