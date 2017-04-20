@@ -9,20 +9,23 @@
 
 namespace QCubed;
 
-// These Aid with the PHP 5.2 DateTime error handling
+// These Aid with the PHP 5.2 QDateTime error handling
 use QCubed\Exception\Caller;
 use QCubed\Exception\InvalidCast;
 use QCubed\Exception\UndefinedProperty;
 
 /**
- * DateTime
- * This DateTime class provides a nice wrapper around the PHP DateTime class,
+ * QDateTime
+ * This QDateTime class provides a nice wrapper around the PHP QDateTime class,
  * which is included with all versions of PHP >= 5.2.0. It includes many enhancements,
  * including the ability to specify a null date or time portion to represent a date only or
  * time only object.
+ *
  * Inherits from the php DateTime object, and the built-in methods are available for you to call
  * as well. In particular, note that the built-in format, and the qFormat routines here take different
  * specifiers. Feel free to use either.
+ *
+ * Note: QDateTime was kept as the name to avoid potential naming confusion and collisions with the built-in DateTime name.
  *
  * @property null|integer   $Month
  * @property null|integer   $Day
@@ -32,11 +35,11 @@ use QCubed\Exception\UndefinedProperty;
  * @property null|integer   $Second
  * @property integer        $Timestamp
  * @property-read string    $Age                A string representation of the age relative to now.
- * @property-read DateTime $LastDayOfTheMonth  A new DateTime representing the last day of this date's month.
- * @property-read DateTime $FirstDayOfTheMonth A new DateTime representing the first day of this date's month.
+ * @property-read QDateTime $LastDayOfTheMonth  A new QDateTime representing the last day of this date's month.
+ * @property-read QDateTime $FirstDayOfTheMonth A new QDateTime representing the first day of this date's month.
  * @was QDateTime
  */
-class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
+class QDateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	/** Used to specify the time right now (used when creating new instances of this class) */
 	const Now = 'now';
 	/** Date and time in ISO format */
@@ -81,30 +84,30 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * The "Default" Display Format
 	 * @var string $DefaultFormat
 	 */
-	public static $DefaultFormat = DateTime::FormatDisplayDateTime;
+	public static $DefaultFormat = QDateTime::FormatDisplayDateTime;
 	
 	/**
 	 * The "Default" Display Format for Times
 	 * @var string $DefaultTimeFormat
 	 */
-	public static $DefaultTimeFormat = DateTime::FormatDisplayTime;
+	public static $DefaultTimeFormat = QDateTime::FormatDisplayTime;
 
 	/**
 	 * The "Default" Display Format for Dates with null times
 	 * @var string $DefaultDateOnlyFormat
 	 */
-	public static $DefaultDateOnlyFormat = DateTime::FormatDisplayDate;
+	public static $DefaultDateOnlyFormat = QDateTime::FormatDisplayDate;
 
 
 	/**
-	 * Returns a new DateTime object that's set to "Now"
-	 * Set blnTimeValue to true (default) for a DateTime, and set blnTimeValue to false for just a Date
+	 * Returns a new QDateTime object that's set to "Now"
+	 * Set blnTimeValue to true (default) for a QDateTime, and set blnTimeValue to false for just a Date
 	 *
 	 * @param boolean $blnTimeValue whether or not to include the time value
-	 * @return DateTime the current date and/or time
+	 * @return QDateTime the current date and/or time
 	 */
 	public static function Now($blnTimeValue = true) {
-		$dttToReturn = new DateTime(DateTime::Now);
+		$dttToReturn = new QDateTime(QDateTime::Now);
 		if (!$blnTimeValue) {
 			$dttToReturn->blnTimeNull = true;
 			$dttToReturn->ReinforceNullProperties();
@@ -118,7 +121,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * @return string
 	 */
 	public static function NowToString($strFormat = null) {
-		$dttNow = new DateTime(DateTime::Now);
+		$dttNow = new QDateTime(QDateTime::Now);
 		return $dttNow->qFormat($strFormat);
 	}
 
@@ -153,7 +156,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	}
 
 	/**
-	 * @param DateTime[] $dttArray
+	 * @param QDateTime[] $dttArray
 	 * @return array
 	 */
 	public function GetSoapDateTimeArray($dttArray) {
@@ -162,7 +165,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 		$strArrayToReturn = array();
 		foreach ($dttArray as $dttItem)
-			array_push($strArrayToReturn, $dttItem->qFormat(DateTime::FormatSoap));
+			array_push($strArrayToReturn, $dttItem->qFormat(QDateTime::FormatSoap));
 		return $strArrayToReturn;
 	}
 
@@ -173,48 +176,48 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 *
 	 * @param integer $intTimestamp
 	 * @param \DateTimeZone $objTimeZone
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public static function FromTimestamp($intTimestamp, \DateTimeZone $objTimeZone = null) {
-		return new DateTime(date('Y-m-d H:i:s', $intTimestamp), $objTimeZone);
+		return new QDateTime(date('Y-m-d H:i:s', $intTimestamp), $objTimeZone);
 	}
 
 	/**
-	 * Construct a DateTime. Does a few things differently than the php version:
+	 * Construct a QDateTime. Does a few things differently than the php version:
 	 * - Always stores timestamps in local or given timezone, so time extraction is easy
 	 * - Has settings to determine if you want a date only or time only type
 	 * - Will NOT throw exceptions. Errors simply result in a null datetime.
 	 *
-	 * @param null|integer|string|DateTime|DateTime $mixValue
+	 * @param null|integer|string|QDateTime|QDateTime $mixValue
 	 * @param \DateTimeZone                           $objTimeZone
 	 * @param int                                    $intType
 	 *
 	 * @throws Caller
 	 */
-	public function __construct($mixValue = null, \DateTimeZone $objTimeZone = null, $intType = DateTime::UnknownType) {
-		if ($mixValue instanceof DateTime) {
-			// Cloning from another DateTime object
+	public function __construct($mixValue = null, \DateTimeZone $objTimeZone = null, $intType = QDateTime::UnknownType) {
+		if ($mixValue instanceof QDateTime) {
+			// Cloning from another QDateTime object
 			if ($objTimeZone)
-				throw new Caller('DateTime cloning cannot take in a DateTimeZone parameter');
+				throw new Caller('QDateTime cloning cannot take in a DateTimeZone parameter');
 			parent::__construct($mixValue->format('Y-m-d H:i:s'), $mixValue->GetTimeZone());
 			$this->blnDateNull = $mixValue->IsDateNull();
 			$this->blnTimeNull = $mixValue->IsTimeNull();
 			$this->ReinforceNullProperties();
 
-		} else if ($mixValue instanceof DateTime) {
-			// Subclassing from a PHP DateTime object
+		} else if ($mixValue instanceof QDateTime) {
+			// Subclassing from a PHP QDateTime object
 			if ($objTimeZone)
-				throw new Caller('DateTime subclassing of a DateTime object cannot take in a DateTimeZone parameter');
+				throw new Caller('QDateTime subclassing of a QDateTime object cannot take in a DateTimeZone parameter');
 			parent::__construct($mixValue->format('Y-m-d H:i:s'), $mixValue->getTimezone());
 
-			// By definition, a DateTime object doesn't have anything nulled
+			// By definition, a QDateTime object doesn't have anything nulled
 			$this->blnDateNull = false;
 			$this->blnTimeNull = false;
 		} else if (!$mixValue) {
 			// Set to "null date"
 			// And Do Nothing Else -- Default Values are already set to Nulled out
 			parent::__construct('2000-01-01 00:00:00', $objTimeZone);
-		} else if (strtolower($mixValue) == DateTime::Now) {
+		} else if (strtolower($mixValue) == QDateTime::Now) {
 			// very common, so quickly deal with now string
 			parent::__construct('now', $objTimeZone);
 			$this->blnDateNull = false;
@@ -253,15 +256,15 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 		// User is requesting to force a particular type.
 		switch ($intType) {
-			case DateTime::DateOnlyType:
+			case QDateTime::DateOnlyType:
 				$this->blnTimeNull = true;
 				$this->ReinforceNullProperties();
 				return;
-			case DateTime::TimeOnlyType:
+			case QDateTime::TimeOnlyType:
 				$this->blnDateNull = true;
 				$this->ReinforceNullProperties();
 				return;
-			case DateTime::DateAndTimeType:	// forcing both a date and time type to not be null
+			case QDateTime::DateAndTimeType:	// forcing both a date and time type to not be null
 				$this->blnDateNull = false;
 				$this->blnTimeNull = false;
 				break;
@@ -271,27 +274,27 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	}
 	
 	/**
-	* Returns a new DateTime object set to the last day of the specified month.
+	* Returns a new QDateTime object set to the last day of the specified month.
 	* 
 	* @param int $intMonth
 	* @param int $intYear
-	* @return DateTime the last day to a month in a year
+	* @return QDateTime the last day to a month in a year
 	*/
 	public static function LastDayOfTheMonth($intMonth, $intYear) {
 		$temp = date('Y-m-t',mktime(0,0,0,$intMonth,1,$intYear));
-		return new DateTime($temp);
+		return new QDateTime($temp);
 	}
 	
 	/**
-	* Returns a new DateTime object set to the first day of the specified month.
+	* Returns a new QDateTime object set to the first day of the specified month.
 	* 
 	* @param int $intMonth
 	* @param int $intYear
-	* @return DateTime the first day of the month
+	* @return QDateTime the first day of the month
 	*/
 	public static function FirstDayOfTheMonth($intMonth, $intYear) {
 		$temp = date('Y-m-d',mktime(0,0,0,$intMonth,1,$intYear));
-		return new DateTime($temp);
+		return new QDateTime($temp);
 	}
 
 	/**
@@ -314,7 +317,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 			$strDate = parent::format('Y-m-d H:i:s');
 		} else {
 			$strTz = null;
-			$strDate = parent::format (DateTime::ISO8601);
+			$strDate = parent::format (QDateTime::ISO8601);
 		}
 		return serialize([
 			1, // version number of serialized data, in case format changes
@@ -384,11 +387,11 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 		if (is_null($strFormat)) {
 			if ($this->blnDateNull && !$this->blnTimeNull) {
-				$strFormat = DateTime::$DefaultTimeFormat;
+				$strFormat = QDateTime::$DefaultTimeFormat;
 			} elseif (!$this->blnDateNull && $this->blnTimeNull) {
-				$strFormat = DateTime::$DefaultDateOnlyFormat;
+				$strFormat = QDateTime::$DefaultDateOnlyFormat;
 			} else {
-				$strFormat = DateTime::$DefaultFormat;
+				$strFormat = QDateTime::$DefaultFormat;
 			}
 		}
 
@@ -508,18 +511,18 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	}
 
 	/**
-	 * Sets the time portion to the given time. If a DateTime is given, will use the time portion of that object.
+	 * Sets the time portion to the given time. If a QDateTime is given, will use the time portion of that object.
 	 * Works around a problem in php that if you set the time across a daylight savings time boundary, the timezone
 	 * does not advance. This version will detect that and advance the timezone.
 	 *
-	 * @param int|DateTime $mixValue
+	 * @param int|QDateTime $mixValue
 	 * @param int|null $intMinute
 	 * @param int|null $intSecond
 	 * @param int|null $intMicroSeconds
 	 * @return $this
 	 */
 	public function setTime($mixValue, $intMinute = null, $intSecond = null, $intMicroSeconds = null) {
-		if ($mixValue instanceof DateTime) {
+		if ($mixValue instanceof QDateTime) {
 			if ($mixValue->IsTimeNull()) {
 				$this->blnTimeNull = true;
 				$this->ReinforceNullProperties();
@@ -579,7 +582,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * @param int $intYear
 	 * @param int $intMonth
 	 * @param int $intDay
-	 * @return $this|DateTime
+	 * @return $this|QDateTime
 	 */
 	public function setDate($intYear, $intMonth, $intDay) {
 		$intYear = Type::Cast($intYear, Type::Integer);
@@ -600,12 +603,12 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	}
 	
 	/**
-	 * Converts the current DateTime object to a different TimeZone.
+	 * Converts the current QDateTime object to a different TimeZone.
 	 * 
 	 * TimeZone should be passed in as a string-based identifier.
 	 * 
-	 * Note that this is different than the built-in DateTime::SetTimezone() method which expicitly
-	 * takes in a DateTimeZone object.  DateTime::ConvertToTimezone allows you to specify any
+	 * Note that this is different than the built-in QDateTime::SetTimezone() method which expicitly
+	 * takes in a DateTimeZone object.  QDateTime::ConvertToTimezone allows you to specify any
 	 * string-based Timezone identifier.  If none is specified and/or if the specified timezone
 	 * is not a valid identifier, it will simply remain unchanged as opposed to throwing an exeception
 	 * or error.
@@ -621,12 +624,12 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	}
 
 	/**
-	 * Returns true if give DateTime is the same.
+	 * Returns true if give QDateTime is the same.
 	 *
-	 * @param DateTime $dttCompare
+	 * @param QDateTime $dttCompare
 	 * @return bool
 	 */
-	public function IsEqualTo(DateTime $dttCompare) {
+	public function IsEqualTo(QDateTime $dttCompare) {
 		// All comparison operations MUST have operands with matching Date Nullstates
 		if ($this->blnDateNull != $dttCompare->blnDateNull)
 			return false;
@@ -634,8 +637,8 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 		// If mismatched Time nullstates, then only compare the Date portions
 		if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
 			// Let's "Null Out" the Time
-			$dttThis = new DateTime($this);
-			$dttThat = new DateTime($dttCompare);
+			$dttThis = new QDateTime($this);
+			$dttThat = new QDateTime($dttCompare);
 			$dttThis->Hour = null;
 			$dttThat->Hour = null;
 
@@ -649,10 +652,10 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 	/**
 	 * Returns true if current date time is earlier than the given one.
-	 * @param DateTime $dttCompare
+	 * @param QDateTime $dttCompare
 	 * @return bool
 	 */
-	public function IsEarlierThan(DateTime $dttCompare) {
+	public function IsEarlierThan(QDateTime $dttCompare) {
 		// All comparison operations MUST have operands with matching Date Nullstates
 		if ($this->blnDateNull != $dttCompare->blnDateNull)
 			return false;
@@ -660,8 +663,8 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 		// If mismatched Time nullstates, then only compare the Date portions
 		if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
 			// Let's "Null Out" the Time
-			$dttThis = new DateTime($this);
-			$dttThat = new DateTime($dttCompare);
+			$dttThis = new QDateTime($this);
+			$dttThat = new QDateTime($dttCompare);
 			$dttThis->Hour = null;
 			$dttThat->Hour = null;
 
@@ -675,10 +678,10 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 	/**
 	 * Returns true if current date time is earlier than the given one.
-	 * @param DateTime $dttCompare
+	 * @param QDateTime $dttCompare
 	 * @return bool
 	 */
-	public function IsEarlierOrEqualTo(DateTime $dttCompare) {
+	public function IsEarlierOrEqualTo(QDateTime $dttCompare) {
 		// All comparison operations MUST have operands with matching Date Nullstates
 		if ($this->blnDateNull != $dttCompare->blnDateNull)
 			return false;
@@ -686,8 +689,8 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 		// If mismatched Time nullstates, then only compare the Date portions
 		if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
 			// Let's "Null Out" the Time
-			$dttThis = new DateTime($this);
-			$dttThat = new DateTime($dttCompare);
+			$dttThis = new QDateTime($this);
+			$dttThat = new QDateTime($dttCompare);
 			$dttThis->Hour = null;
 			$dttThat->Hour = null;
 
@@ -701,10 +704,10 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 	/**
 	 * Returns true if current date time is later than the given one.
-	 * @param DateTime $dttCompare
+	 * @param QDateTime $dttCompare
 	 * @return bool
 	 */
-	public function IsLaterThan(DateTime $dttCompare) {
+	public function IsLaterThan(QDateTime $dttCompare) {
 		// All comparison operations MUST have operands with matching Date Nullstates
 		if ($this->blnDateNull != $dttCompare->blnDateNull)
 			return false;
@@ -712,8 +715,8 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 		// If mismatched Time nullstates, then only compare the Date portions
 		if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
 			// Let's "Null Out" the Time
-			$dttThis = new DateTime($this);
-			$dttThat = new DateTime($dttCompare);
+			$dttThis = new QDateTime($this);
+			$dttThat = new QDateTime($dttCompare);
 			$dttThis->Hour = null;
 			$dttThat->Hour = null;
 
@@ -727,10 +730,10 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 	/**
 	 * Returns true if current date time is later than or equal to the given one.
-	 * @param DateTime $dttCompare
+	 * @param QDateTime $dttCompare
 	 * @return bool
 	 */
-	public function IsLaterOrEqualTo(DateTime $dttCompare) {
+	public function IsLaterOrEqualTo(QDateTime $dttCompare) {
 		// All comparison operations MUST have operands with matching Date Nullstates
 		if ($this->blnDateNull != $dttCompare->blnDateNull)
 			return false;
@@ -738,8 +741,8 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 		// If mismatched Time nullstates, then only compare the Date portions
 		if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
 			// Let's "Null Out" the Time
-			$dttThis = new DateTime($this);
-			$dttThat = new DateTime($dttCompare);
+			$dttThis = new QDateTime($this);
+			$dttThat = new QDateTime($dttCompare);
 			$dttThis->Hour = null;
 			$dttThat->Hour = null;
 
@@ -755,10 +758,10 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Compare the current date with the given date. Return -1 if current date is less than given date, 0 if equal,
 	 * and 1 if greater. Null dates are considered the earliest possible date.
 	 *
-	 * @param DateTime $dttCompare
+	 * @param QDateTime $dttCompare
 	 * @return int
 	 */
-	public function Compare(DateTime $dttCompare) {
+	public function Compare(QDateTime $dttCompare) {
 		// All comparison operations MUST have operands with matching Date Nullstates
 		if ($this->blnDateNull && !$dttCompare->blnDateNull) {
 			return -1;
@@ -769,8 +772,8 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 		// If mismatched Time nullstates, then only compare the Date portions
 		if ($this->blnTimeNull != $dttCompare->blnTimeNull) {
 			// Let's "Null Out" the Time
-			$dttThis = new DateTime($this);
-			$dttThat = new DateTime($dttCompare);
+			$dttThis = new QDateTime($this);
+			$dttThat = new QDateTime($dttCompare);
 			$dttThis->Hour = null;
 			$dttThat->Hour = null;
 		} else {
@@ -784,10 +787,10 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Returns the difference as a QDateSpan, which is easier to work with and more full featured than
 	 * the php DateTimeInterval class.
 	 *
-	 * @param DateTime $dttDateTime
+	 * @param QDateTime $dttDateTime
 	 * @return DateTimeSpan
 	 */
-	public function Difference(DateTime $dttDateTime) {
+	public function Difference(QDateTime $dttDateTime) {
 		$intDifference = $this->Timestamp - $dttDateTime->Timestamp;
 		return new DateTimeSpan($intDifference);
 	}
@@ -808,7 +811,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Add a number of seconds. Use negative value to go earlier in time.
 	 *
 	 * @param integer $intSeconds
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function AddSeconds($intSeconds){
 		$this->Second += $intSeconds;
@@ -819,7 +822,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Add minutes to the time.
 	 *
 	 * @param integer $intMinutes
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function AddMinutes($intMinutes){
 		$this->Minute += $intMinutes;
@@ -830,7 +833,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Add hours to the time.
 	 *
 	 * @param integer $intHours
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function AddHours($intHours){
 		$this->Hour += $intHours;
@@ -841,7 +844,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Add days to the time.
 	 *
 	 * @param integer $intDays
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function AddDays($intDays){
 		$this->Day += $intDays;
@@ -853,7 +856,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * to be the last day of that month.
 	 *
 	 * @param integer $intMonths
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function AddMonths($intMonths){
 		$prevDay = $this->Day;
@@ -869,7 +872,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * Add years to the time.
 	 *
 	 * @param integer $intYears
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function AddYears($intYears){
 		$this->Year += $intYears;
@@ -879,9 +882,9 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	/**
 	 * Modifies the date or time based on values found int a string.
 	 *
-	 * @see DateTime::modify()
+	 * @see QDateTime::modify()
 	 * @param string $mixValue
-	 * @return DateTime
+	 * @return QDateTime
 	 */
 	public function Modify($mixValue) {
 		parent::modify($mixValue);
@@ -938,7 +941,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 	 * PHP magic method
 	 * @param $strName
 	 *
-	 * @return DateTime|string
+	 * @return QDateTime|string
 	 * @throws UndefinedProperty
 	 */
 	public function __get($strName) {
@@ -984,7 +987,7 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 
 			case 'Age':
 				// Figure out the Difference from "Now"
-				$dtsFromCurrent = $this->Difference(DateTime::Now());
+				$dtsFromCurrent = $this->Difference(QDateTime::Now());
 				
 				// It's in the future ('about 2 hours from now')
 				if ($dtsFromCurrent->IsPositive())
@@ -1110,54 +1113,54 @@ class DateTime extends \DateTime implements \JsonSerializable, \Serializable {
 }
 
 /*
-This is a reference to the documentation for hte PHP DateTime classes (as of PHP 5.2)
+This is a reference to the documentation for hte PHP QDateTime classes (as of PHP 5.2)
 
-  DateTime::ATOM
-  DateTime::COOKIE
-  DateTime::ISO8601
-  DateTime::RFC822
-  DateTime::RFC850
-  DateTime::RFC1036
-  DateTime::RFC1123
-  DateTime::RFC2822
-  DateTime::RFC3339
-  DateTime::RSS
-  DateTime::W3C
+  QDateTime::ATOM
+  QDateTime::COOKIE
+  QDateTime::ISO8601
+  QDateTime::RFC822
+  QDateTime::RFC850
+  QDateTime::RFC1036
+  QDateTime::RFC1123
+  QDateTime::RFC2822
+  QDateTime::RFC3339
+  QDateTime::RSS
+  QDateTime::W3C
 
-  DateTime::__construct([string time[, DateTimeZone object]])
-  - Returns new DateTime object
+  QDateTime::__construct([string time[, DateTimeZone object]])
+  - Returns new QDateTime object
   
-  string DateTime::format(string format)
+  string QDateTime::format(string format)
   - Returns date formatted according to given format
   
-  long DateTime::getOffset()
+  long QDateTime::getOffset()
   - Returns the DST offset
   
-  DateTimeZone DateTime::getTimezone()
-  - Return new DateTimeZone object relative to give DateTime
+  DateTimeZone QDateTime::getTimezone()
+  - Return new DateTimeZone object relative to give QDateTime
   
-  void DateTime::modify(string modify)
+  void QDateTime::modify(string modify)
   - Alters the timestamp
   
-  array DateTime::parse(string date)
+  array QDateTime::parse(string date)
   - Returns associative array with detailed info about given date
   
-  void DateTime::setDate(long year, long month, long day)
+  void QDateTime::setDate(long year, long month, long day)
   - Sets the date
   
-  void DateTime::setISODate(long year, long week[, long day])
+  void QDateTime::setISODate(long year, long week[, long day])
   - Sets the ISO date
   
-  void DateTime::setTime(long hour, long minute[, long second])
+  void QDateTime::setTime(long hour, long minute[, long second])
   - Sets the time
   
-  void DateTime::setTimezone(DateTimeZone object)
-  - Sets the timezone for the DateTime object
+  void QDateTime::setTimezone(DateTimeZone object)
+  - Sets the timezone for the QDateTime object
 */
 
 /* Some quick and dirty test harnesses
-$dtt1 = new DateTime();
-$dtt2 = new DateTime();
+$dtt1 = new QDateTime();
+$dtt2 = new QDateTime();
 printTable($dtt1, $dtt2);
 $dtt2->setDate(2000, 1, 1);
 $dtt1->setTime(0,0,3);
@@ -1185,7 +1188,7 @@ function printDate($dtt) {
 	print ('<br/>');
 	print ('Date Null: ' . (($dtt->IsDateNull()) ? 'Yes' : 'No'));
 	print ('<br/>');
-	print ('Date: ' . $dtt->qFormat(DateTime::FormatDisplayDateTimeFull));
+	print ('Date: ' . $dtt->qFormat(QDateTime::FormatDisplayDateTimeFull));
 	print ('<br/>');
 	print ('Month: ' . $dtt->Month . '<br/>');
 	print ('Day: ' . $dtt->Day . '<br/>');

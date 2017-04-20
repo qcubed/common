@@ -49,4 +49,8 @@ class Translator {
 			return $strToken;
 	}
 
+	public static function _t($strToken) {
+		return self::translate($strToken);
+	}
+
 }

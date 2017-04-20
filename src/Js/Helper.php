@@ -168,8 +168,8 @@ abstract class Helper {
 	 * to qcubed.unpackParams in qcubed.js to create the javascript form of the object. This decoder will look for objects
 	 * that have the 'qObjType' key set and send the object to the special unpacker.
 	 *
-	 * DateTime handling is absent below. DateTime objects will get converted, but not in a very useful way. If you
-	 * are using strict DateTime objects (not likely since the framework normally uses QDateTime for all date objects),
+	 * QDateTime handling is absent below. QDateTime objects will get converted, but not in a very useful way. If you
+	 * are using strict QDateTime objects (not likely since the framework normally uses QDateTime for all date objects),
 	 * you should convert them to QDateTime objects before sending them here.
 	 *
 	 * @param mixed $objValue

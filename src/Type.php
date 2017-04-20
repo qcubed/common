@@ -385,7 +385,7 @@ class Type {
 			case Type::Boolean: return 'Type::Boolean';
 			case Type::ArrayType: return 'Type::ArrayType';
 			case Type::Resource: return 'Type::Resource';
-			case Type::DateTime: return 'Type::DateTime';
+			case Type::DateTime: return 'Type::QDateTime';
 
 			default:
 				// Could not determine type
@@ -488,7 +488,7 @@ class Type {
 			case Type::Boolean:
 				$strItemName = 'boolean';
 				break;
-			case Type::DateTime:
+			case Type::QDateTime:
 				$strItemName = 'dateTime';
 				break;
 

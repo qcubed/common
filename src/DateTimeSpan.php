@@ -104,12 +104,12 @@ class DateTimeSpan extends AbstractBase {
 	*/
 	
 	/**
-	 * Sets current DateTimeSpan to the difference between two DateTime objects
+	 * Sets current DateTimeSpan to the difference between two QDateTime objects
 	 *
-	 * @param DateTime $dttFrom
-	 * @param DateTime $dttTo
+	 * @param QDateTime $dttFrom
+	 * @param QDateTime $dttTo
 	 */
-	public function SetFromQDateTime(DateTime $dttFrom, DateTime $dttTo){
+	public function SetFromQDateTime(QDateTime $dttFrom, QDateTime $dttTo){
 		$this->Add($dttFrom->Difference($dttTo));
 	}
 	
@@ -252,7 +252,7 @@ class DateTimeSpan extends AbstractBase {
 	 * Returns the time difference in approximate duration
 	 * e.g. "about 4 months" or "4 minutes"
 	 *
-	 * The DateTime class uses this function in its 'Age' property accessor
+	 * The QDateTime class uses this function in its 'Age' property accessor
 	 *
 	 * @return null|string
 	 */
