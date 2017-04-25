@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit bootstrap="localbootstrap.php"
          colors="true"
-         printerClass="PHPUnit_TextUI_ResultPrinter">
+         printerClass="\QCubed\Test\HtmlReporter">
 	<testsuites>
 		<testsuite name="QCubed Common Unit Tests">
 			<directory>./unit</directory>
