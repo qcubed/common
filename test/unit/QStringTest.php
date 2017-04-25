@@ -6,7 +6,7 @@ use QCubed\QString;
  * 
  * @package Tests
  */
-class QStringTest extends \UnitTestCaseBase {
+class QStringTest extends \QCubed\Test\UnitTestCaseBase {
 
 	public function testLongestCommonSubsequence() {
 		$this->lcsCheckValueHelper("hello world", "world war 2", "world");

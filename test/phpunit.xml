@@ -1,6 +1,6 @@
-<phpunit
-	processIsolation="false"
-    printerClass="PHPUnit_TextUI_ResultPrinter">
+<phpunit bootstrap="./travis-config.inc.php"
+         colors="true"
+        processIsolation="false">
     <testsuites>
         <testsuite name="QCubed Common Unit Test">
             <directory>unit</directory>
