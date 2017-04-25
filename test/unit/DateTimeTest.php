@@ -7,7 +7,7 @@
 
 use QCubed\QDateTime;
 
-class DateTimeTests extends UnitTestCaseBase
+class DateTimeTests extends \QCubed\Test\UnitTestCaseBase
 {
 	public function testNow()
 	{

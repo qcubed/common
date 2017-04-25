@@ -6,7 +6,7 @@
 
 use QCubed\Type;
 
-class TypeTest extends UnitTestCaseBase {
+class TypeTest extends \QCubed\Test\UnitTestCaseBase {
 	public function testCasting() {
 		define('_FAIL_', 'fail');
 		$cases = array( 
