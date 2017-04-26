@@ -15,15 +15,18 @@ use QCubed\Translator;
  * NOTE: this exception will not fire automatically for you unless you use it with the try-catch block
  * @was QIndexOutOfRangeException
  */
-class IndexOutOfRange extends Caller {
-	/**
-	 * Constructor method
-	 * @param string $intIndex
-	 * @param int    $strMessage
-	 */
-	public function __construct($intIndex, $strMessage) {
-		if ($strMessage)
-			$strMessage = ": " . $strMessage;
-		parent::__construct(sprintf(Translator::translate("Index (%s) is out of range%s"), $intIndex, $strMessage), 2);
-	}
+class IndexOutOfRange extends Caller
+{
+    /**
+     * Constructor method
+     * @param string $intIndex
+     * @param int    $strMessage
+     */
+    public function __construct($intIndex, $strMessage)
+    {
+        if ($strMessage) {
+            $strMessage = ": " . $strMessage;
+        }
+        parent::__construct(sprintf(Translator::translate("Index (%s) is out of range%s"), $intIndex, $strMessage), 2);
+    }
 }

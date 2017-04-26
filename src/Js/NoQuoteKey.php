@@ -23,29 +23,33 @@ namespace QCubed\Js;
  * @package QCubed\Js
  * @was QJsNoQuoteKey
  */
-class NoQuoteKey implements \JsonSerializable {
-	protected $mixContent;
+class NoQuoteKey implements \JsonSerializable
+{
+    protected $mixContent;
 
-	/**
-	 * NoQuoteKey constructor.
-	 * @param $mixContent
-	 */
-	public function __construct ($mixContent) {
-		$this->mixContent = $mixContent;
-	}
+    /**
+     * NoQuoteKey constructor.
+     * @param $mixContent
+     */
+    public function __construct($mixContent)
+    {
+        $this->mixContent = $mixContent;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function toJsObject() {
-		return Helper::toJsObject($this->mixContent);
-	}
+    /**
+     * @return string
+     */
+    public function toJsObject()
+    {
+        return Helper::toJsObject($this->mixContent);
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function jsonSerialize() {
-		return $this->mixContent;
-	}
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->mixContent;
+    }
 
 }

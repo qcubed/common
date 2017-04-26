@@ -104,6 +104,7 @@ class Caller extends \Exception
 
     /**
      * Increment the offset of the backtrace to hid the current level of code and point to caller.
+     * @was IncrementOffset
      */
     public function incrementOffset()
     {
@@ -122,6 +123,7 @@ class Caller extends \Exception
 
     /**
      * Decrement the backtrace, restoring an increment
+     * @was DecrementOffset
      */
     public function decrementOffset()
     {

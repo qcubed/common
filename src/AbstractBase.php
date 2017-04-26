@@ -78,6 +78,7 @@ abstract class AbstractBase
      * @param string|array $mixOverrideArray
      * @throws \Exception|Caller
      * @return void
+     * @was OverrideAttributes
      */
     final public function overrideAttributes($mixOverrideArray)
     {

@@ -17,13 +17,15 @@ namespace QCubed\Exception;
  * be called whenever an InvalidCastException is caught and rethrown).
  * @was QInvalidCastException
  */
-class InvalidCast extends Caller {
-	/**
-	 * Constructor
-	 * @param string $strMessage
-	 * @param int    $intOffset
-	 */
-	public function __construct($strMessage, $intOffset = 2) {
-		parent::__construct($strMessage, $intOffset);
-	}
+class InvalidCast extends Caller
+{
+    /**
+     * Constructor
+     * @param string $strMessage
+     * @param int    $intOffset
+     */
+    public function __construct($strMessage, $intOffset = 2)
+    {
+        parent::__construct($strMessage, $intOffset);
+    }
 }

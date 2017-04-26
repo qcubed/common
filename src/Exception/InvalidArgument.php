@@ -14,14 +14,16 @@ use QCubed\Translator;
  * Thrown when a particular property of class is not defined and we try to access it
  * @was QInvalidArgumentException
  */
-class InvalidArgument extends Caller {
-	/**
-	 * Constructor method
-	 * @param string $strType
-	 * @param int    $strClass
-	 * @param string $strProperty
-	 */
-	public function __construct($strType, $strClass, $strProperty) {
-		parent::__construct(sprintf(Translator::translate("Invalid argument '%s' in '%s' class: %s"), $strProperty, $strType, $strClass), 2);
-	}
+class InvalidArgument extends Caller
+{
+    /**
+     * Constructor method
+     * @param string $strType
+     * @param int    $strClass
+     * @param string $strProperty
+     */
+    public function __construct($strType, $strClass, $strProperty)
+    {
+        parent::__construct(sprintf(Translator::translate("Invalid argument '%s' in '%s' class: %s"), $strProperty, $strType, $strClass), 2);
+    }
 }
