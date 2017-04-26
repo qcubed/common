@@ -34,115 +34,132 @@ namespace QCubed\Exception;
  *
  * So the code snippet to call InnerMethod by OuterMethod should look like:
  * <code>
- *	function OuterMethod($mixValue) {
- *		try {
- *			InnerMethod($mixValue);
- *		} catch (CallerException $objExc) {
- *			$objExc->IncrementOffset();
- *			throw $objExc;
- *		}
- *		// Do Other Stuff
- *	}
+ *    function OuterMethod($mixValue) {
+ *        try {
+ *            innerMethod($mixValue);
+ *        } catch (CallerException $objExc) {
+ *            $objExc->incrementOffset();
+ *            throw $objExc;
+ *        }
+ *        // Do Other Stuff
+ *    }
  * </code>
  * Again, this will assure the user that the line of code responsible for the excpetion is properly being reported
  * by the QCubed error reporting/handler.
+ *
  * @property-read int $Offset The exception offset.
  * @property-read string $BackTrace The exception backtrace.
  * @property-read string $TraceArray The exception backtrace in a form of an array.
  * @was QCallerException
  */
-class Caller extends \Exception {
-	/**
-	 * @var int Exception offset
-	 *          The element in the stack trace array indicated by this index is marked
-	 *          as the point which caused the exception
-	 */
-	private $intOffset;
-	/** @var array The stack trace array as caputred by debug_backtrace() */
-	private $strTraceArray;
+class Caller extends \Exception
+{
+    /**
+     * @var int Exception offset
+     *          The element in the stack trace array indicated by this index is marked
+     *          as the point which caused the exception
+     */
+    private $intOffset;
+    /** @var array The stack trace array as caputred by debug_backtrace() */
+    private $strTraceArray;
 
-	/**
-	 * Set message for the exception
-	 *
-	 * @param string $strMessage
-	 */
-	public function setMessage($strMessage) {
-		$this->message = $strMessage;
-	}
+    /**
+     * The constructor of CallerExceptions.  Takes in a message string
+     * as well as an optional Offset parameter (defaults to 1).
+     * The Offset specifiies how many calls up the call stack is responsible
+     * for the exception.  By definition, when a CallerException is called,
+     * at the very least the Caller of the most immediate function, which is
+     * 1 up the call stack, is responsible.  So therefore, by default, intOffset
+     * is set to 1.
+     *
+     * It is rare for intOffset to be set to an integer other than 1.
+     *
+     * Normally, the Offset would be altered by calls to IncrementOffset
+     * at every step the CallerException is caught/rethrown up the call stack.
+     *
+     * @param string $strMessage the Message of the exception
+     * @param integer $intOffset the optional Offset value (currently defaulted to 1)
+     */
+    public function __construct($strMessage, $intOffset = 1)
+    {
+        parent::__construct($strMessage);
+        $this->intOffset = $intOffset;
+        $this->strTraceArray = debug_backtrace();
 
-	/**
-	 * The constructor of CallerExceptions.  Takes in a message string
-	 * as well as an optional Offset parameter (defaults to 1).
-	 * The Offset specifiies how many calls up the call stack is responsible
-	 * for the exception.  By definition, when a CallerException is called,
-	 * at the very least the Caller of the most immediate function, which is
-	 * 1 up the call stack, is responsible.  So therefore, by default, intOffset
-	 * is set to 1.
-	 *
-	 * It is rare for intOffset to be set to an integer other than 1.
-	 *
-	 * Normally, the Offset would be altered by calls to IncrementOffset
-	 * at every step the CallerException is caught/rethrown up the call stack.
-	 *
-	 * @param string  $strMessage the Message of the exception
-	 * @param integer $intOffset  the optional Offset value (currently defaulted to 1)
-	 */
-	public function __construct($strMessage, $intOffset = 1) {
-		parent::__construct($strMessage);
-		$this->intOffset = $intOffset;
-		$this->strTraceArray = debug_backtrace();
+        if (isset($this->strTraceArray[$this->intOffset]['file'])) {
+            $this->file = $this->strTraceArray[$this->intOffset]['file'];
+            $this->line = $this->strTraceArray[$this->intOffset]['line'];
+        }
+    }
 
-		if (isset($this->strTraceArray[$this->intOffset]['file'])) {
-			$this->file = $this->strTraceArray[$this->intOffset]['file'];
-			$this->line = $this->strTraceArray[$this->intOffset]['line'];
-		}
-	}
+    /**
+     * Set message for the exception
+     *
+     * @param string $strMessage
+     */
+    public function setMessage($strMessage)
+    {
+        $this->message = $strMessage;
+    }
 
-	public function IncrementOffset() {
-		$this->intOffset++;
-		if (array_key_exists('file', $this->strTraceArray[$this->intOffset]))
-			$this->file = $this->strTraceArray[$this->intOffset]['file'];
-		else
-			$this->file = '';
-		if (array_key_exists('line', $this->strTraceArray[$this->intOffset]))
-			$this->line = $this->strTraceArray[$this->intOffset]['line'];
-		else
-			$this->line = '';
-	}
+    /**
+     * Increment the offset of the backtrace to hid the current level of code and point to caller.
+     */
+    public function incrementOffset()
+    {
+        $this->intOffset++;
+        if (array_key_exists('file', $this->strTraceArray[$this->intOffset])) {
+            $this->file = $this->strTraceArray[$this->intOffset]['file'];
+        } else {
+            $this->file = '';
+        }
+        if (array_key_exists('line', $this->strTraceArray[$this->intOffset])) {
+            $this->line = $this->strTraceArray[$this->intOffset]['line'];
+        } else {
+            $this->line = '';
+        }
+    }
 
-	public function DecrementOffset() {
-		$this->intOffset--;
-		if (array_key_exists('file', $this->strTraceArray[$this->intOffset]))
-			$this->file = $this->strTraceArray[$this->intOffset]['file'];
-		else
-			$this->file = '';
-		if (array_key_exists('line', $this->strTraceArray[$this->intOffset]))
-			$this->line = $this->strTraceArray[$this->intOffset]['line'];
-		else
-			$this->line = '';
-	}
+    /**
+     * Decrement the backtrace, restoring an increment
+     */
+    public function decrementOffset()
+    {
+        $this->intOffset--;
+        if (array_key_exists('file', $this->strTraceArray[$this->intOffset])) {
+            $this->file = $this->strTraceArray[$this->intOffset]['file'];
+        } else {
+            $this->file = '';
+        }
+        if (array_key_exists('line', $this->strTraceArray[$this->intOffset])) {
+            $this->line = $this->strTraceArray[$this->intOffset]['line'];
+        } else {
+            $this->line = '';
+        }
+    }
 
-	/**
-	 * PHP magic method
-	 * @param $strName
-	 * @return array|int|mixed
-	 * @throws \Exception
-	 */
-	public function __get($strName) {
-		switch ($strName) {
-			case "Offset":
-				return $this->intOffset;
+    /**
+     * PHP magic method
+     * @param $strName
+     * @return array|int|mixed
+     * @throws \Exception
+     */
+    public function __get($strName)
+    {
+        switch ($strName) {
+            case "Offset":
+                return $this->intOffset;
 
-			case "BackTrace":
-				$objTraceArray = debug_backtrace();
-				return (var_export($objTraceArray, true));
+            case "BackTrace":
+                $objTraceArray = debug_backtrace();
+                return (var_export($objTraceArray, true));
 
-			case "TraceArray":
-				return $this->strTraceArray;
+            case "TraceArray":
+                return $this->strTraceArray;
 
-			default:
-				throw new \Exception ("Unknown property " . $strName);
+            default:
+                throw new \Exception("Unknown property " . $strName);
 
-		}
-	}
+        }
+    }
 }

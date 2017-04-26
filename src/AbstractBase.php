@@ -17,7 +17,7 @@ use QCubed\Exception\UndefinedProperty;
 /**
  * This is the Base Class for ALL classes in the system.  It provides
  * proper error handling of property getters and setters.  It also
- * provides the OverrideAttribute functionality.
+ * provides the overrideAttribute functionality.
  * @was QBaseClass
  */
 abstract class AbstractBase
@@ -71,7 +71,7 @@ abstract class AbstractBase
      * in mixOverrideArray.
      * Each item in mixOverrideArray needs to be either a string in the format
      * of Property=Value or an array in the format of array(Property => Value).
-     * OverrideAttributes() will basically call
+     * overrideAttributes() will basically call
      * $this->Property = Value for each string element in the array.
      * Value can be surrounded by quotes... but this is optional.
      *
@@ -79,9 +79,9 @@ abstract class AbstractBase
      * @throws \Exception|Caller
      * @return void
      */
-    final public function OverrideAttributes($mixOverrideArray)
+    final public function overrideAttributes($mixOverrideArray)
     {
-        // Iterate through the OverrideAttribute Array
+        // Iterate through the overrideAttribute Array
         if ($mixOverrideArray) {
             foreach ($mixOverrideArray as $mixOverrideItem) {
                 if (is_array($mixOverrideItem)) {
@@ -95,10 +95,10 @@ abstract class AbstractBase
                         }
                     }
                 } else {
-                    // Extract the Key and Value for this OverrideAttribute
+                    // Extract the Key and Value for this overrideAttribute
                     $intPosition = strpos($mixOverrideItem, "=");
                     if ($intPosition === false) {
-                        throw new Caller(sprintf("Improperly formatted OverrideAttribute: %s", $mixOverrideItem));
+                        throw new Caller(sprintf("Improperly formatted overrideAttribute: %s", $mixOverrideItem));
                     }
                     $strKey = substr($mixOverrideItem, 0, $intPosition);
                     $mixValue = substr($mixOverrideItem, $intPosition + 1);
@@ -106,12 +106,12 @@ abstract class AbstractBase
                     // Ensure that the Value is properly formatted (unquoted, single-quoted, or double-quoted)
                     if (substr($mixValue, 0, 1) == "'") {
                         if (substr($mixValue, strlen($mixValue) - 1) != "'") {
-                            throw new Caller(sprintf("Improperly formatted OverrideAttribute: %s", $mixOverrideItem));
+                            throw new Caller(sprintf("Improperly formatted overrideAttribute: %s", $mixOverrideItem));
                         }
                         $mixValue = substr($mixValue, 1, strlen($mixValue) - 2);
                     } elseif (substr($mixValue, 0, 1) == '"') {
                         if (substr($mixValue, strlen($mixValue) - 1) != '"') {
-                            throw new Caller(sprintf("Improperly formatted OverrideAttribute: %s", $mixOverrideItem));
+                            throw new Caller(sprintf("Improperly formatted overrideAttribute: %s", $mixOverrideItem));
                         }
                         $mixValue = substr($mixValue, 1, strlen($mixValue) - 2);
                     }
