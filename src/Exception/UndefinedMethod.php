@@ -18,6 +18,7 @@ class UndefinedMethod extends Caller
 {
     public function __construct($strClass, $strMethod)
     {
-        parent::__construct(sprintf(Translator::translate("Undefined method in '%s' class: %s"), $strClass, $strMethod), 2);
+        parent::__construct(sprintf(Translator::translate("Undefined method in '%s' class: %s"), $strClass, $strMethod),
+            2);
     }
 }

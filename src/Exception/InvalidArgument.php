@@ -19,11 +19,12 @@ class InvalidArgument extends Caller
     /**
      * Constructor method
      * @param string $strType
-     * @param int    $strClass
+     * @param int $strClass
      * @param string $strProperty
      */
     public function __construct($strType, $strClass, $strProperty)
     {
-        parent::__construct(sprintf(Translator::translate("Invalid argument '%s' in '%s' class: %s"), $strProperty, $strType, $strClass), 2);
+        parent::__construct(sprintf(Translator::translate("Invalid argument '%s' in '%s' class: %s"), $strProperty,
+            $strType, $strClass), 2);
     }
 }

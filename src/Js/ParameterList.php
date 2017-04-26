@@ -15,20 +15,24 @@ namespace QCubed\Js;
  * @package QCubed\Js
  * @was QJsParameterList
  */
-class ParameterList {
-	protected $arrContent;
+class ParameterList
+{
+    protected $arrContent;
 
-	public function __construct ($arrContent) {
-		$this->arrContent = $arrContent;
-	}
+    public function __construct($arrContent)
+    {
+        $this->arrContent = $arrContent;
+    }
 
-	public function toJsObject() {
-		$strList = '';
-		foreach ($this->arrContent as $objItem) {
-			if (strlen($strList) > 0) $strList .= ',';
-			$strList .= Helper::toJsObject($objItem);
-		}
-		return $strList;
-	}
+    public function toJsObject()
+    {
+        $strList = '';
+        foreach ($this->arrContent as $objItem) {
+            if (strlen($strList) > 0) {
+                $strList .= ',';
+            }
+            $strList .= Helper::toJsObject($objItem);
+        }
+        return $strList;
+    }
 }
-

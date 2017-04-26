@@ -17,15 +17,16 @@ namespace QCubed;
  *
  * @package QCubed
  */
-class ErrorAttribute {
-	public $Label;
-	public $Contents;
-	public $MultiLine;
+class ErrorAttribute
+{
+    public $Label;
+    public $Contents;
+    public $MultiLine;
 
-	public function __construct($strLabel, $strContents, $blnMultiLine) {
-		$this->Label = $strLabel;
-		$this->Contents = $strContents;
-		$this->MultiLine = $blnMultiLine;
-	}
+    public function __construct($strLabel, $strContents, $blnMultiLine)
+    {
+        $this->Label = $strLabel;
+        $this->Contents = $strContents;
+        $this->MultiLine = $blnMultiLine;
+    }
 }
-

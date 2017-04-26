@@ -51,5 +51,4 @@ class NoQuoteKey implements \JsonSerializable
     {
         return $this->mixContent;
     }
-
 }

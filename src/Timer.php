@@ -12,216 +12,231 @@ namespace QCubed;
 use QCubed\Exception\Caller;
 
 /**
- * Timer class can help you lightweight profiling of your applications. 
- * Use it to measure how long tasks take. 
- * 
+ * Timer class can help you lightweight profiling of your applications.
+ * Use it to measure how long tasks take.
+ *
  * @author Ago Luberg
  * @was QTimer
  */
-class Timer {
-	/**
-	 * Name of the timer
-	 * @var string
-	 */
-	protected $strName;
-	/**
-	 * Total count of timer starts
-	 * @var int
-	 */
-	protected $intCountStarted = 0;
-	/**
-	 * Timer start time. If -1, then timer is not started
-	 * @var float
-	 */
-	protected $fltTimeStart = -1;
-	/**
-	 * Timer run time. If timer is stopped, then execution time is kept here
-	 * @var float
-	 */
-	protected $fltTime = 0;
+class Timer
+{
+    /**
+     * Array of QTime instances
+     * @var Timer[]
+     */
+    protected static $objTimerArray = array();
+    /**
+     * Name of the timer
+     * @var string
+     */
+    protected $strName;
+    /**
+     * Total count of timer starts
+     * @var int
+     */
+    protected $intCountStarted = 0;
+    /**
+     * Timer start time. If -1, then timer is not started
+     * @var float
+     */
+    protected $fltTimeStart = -1;
+    /**
+     * Timer run time. If timer is stopped, then execution time is kept here
+     * @var float
+     */
+    protected $fltTime = 0;
 
-	/**
-	 * @param string $strName Timer name
-	 * @param boolean $blnStart Whether timer is started
-	 */
-	protected function __construct($strName, $blnStart = false) {
-		$this->strName = $strName;
-		if ($blnStart) {
-			$this->startTimer();
-		}
-	}
+    /**
+     * @param string $strName Timer name
+     * @param boolean $blnStart Whether timer is started
+     */
+    protected function __construct($strName, $blnStart = false)
+    {
+        $this->strName = $strName;
+        if ($blnStart) {
+            $this->startTimer();
+        }
+    }
 
-	/**
-	 * @return $this
-	 * @throws Caller
-	 */
-	public function StartTimer() {
-		if ($this->fltTimeStart != -1) {
-				throw new Caller("Timer was already started");
-		}
-		$this->fltTimeStart = microtime(true);
-		$this->intCountStarted++;
-		return $this;
-	}
+    /**
+     * @return $this
+     * @throws Caller
+     */
+    public function StartTimer()
+    {
+        if ($this->fltTimeStart != -1) {
+            throw new Caller("Timer was already started");
+        }
+        $this->fltTimeStart = microtime(true);
+        $this->intCountStarted++;
+        return $this;
+    }
 
-	/**
-	 * Returns timer's time
-	 * @return float Timer's time. If timer is not running, returns saved time.
-	 */
-	public function GetTimerTime() {
-		if ($this->fltTimeStart == -1) {
-			return $this->fltTime;
-		}
-		return $this->fltTime + microtime(true) - $this->fltTimeStart;
-	}
+    /**
+     * Starts (new) timer with given name
+     * @param string [optional] $strName Timer name
+     * @return Timer
+     */
+    public static function Start($strName = 'default')
+    {
+        $objTimer = static::GetTimerInstance($strName);
+        return $objTimer->StartTimer();
+    }
 
-	/**
-	 * Resets timer
-	 * @return float Timer's time before reset
-	 */
-	public function ResetTimer() {
-		$fltTime = $this->StopTimer();
-		$this->fltTime = 0;
-		$this->StartTimer();
-		return $fltTime;
-	}
+    protected static function GetTimerInstance($strName, $blnCreateNew = true)
+    {
+        if (!isset(static::$objTimerArray[$strName])) {
+            if ($blnCreateNew) {
+                static::$objTimerArray[$strName] = new Timer($strName);
+            } else {
+                return null;
+            }
+        }
+        return static::$objTimerArray[$strName];
+    }
 
-	/**
-	 * Stops timer. Saves current time for later usage
-	 * @return float Timer's time
-	 */
-	public function StopTimer() {
-		$this->fltTime = $this->GetTimerTime();
-		$this->fltTimeStart = -1;
-		return $this->fltTime;
-	}
+    /**
+     * Gets time from timer with given name
+     * @param string [optional] $strName Timer name
+     * @return float Timer's time
+     * @throws Caller
+     */
+    public static function GetTime($strName = 'default')
+    {
+        $objTimer = static::GetTimerInstance($strName, false);
+        if ($objTimer) {
+            return $objTimer->GetTimerTime();
+        } else {
+            throw new Caller('Timer with name ' . $strName . ' was not started, cannot get its value');
+        }
+    }
 
-	/**
-	 * Default toString method for timer
-	 * @return string
-	 */
-	public function __toString() {
-		return sprintf("%s - start count: %s - execution time: %f",
-		$this->strName,
-		$this->intCountStarted,
-		$this->GetTimerTime());
-	}
-	
-	public function __get($strName) {
-		switch ($strName) {
-			case 'CountStarted':
-				return $this->intCountStarted;
-			case 'TimeStart':
-				return $this->fltTimeStart;
-			default:
-				throw new Caller('Invalid property: $strName');
-		}		
-	}
+    /**
+     * Returns timer's time
+     * @return float Timer's time. If timer is not running, returns saved time.
+     */
+    public function GetTimerTime()
+    {
+        if ($this->fltTimeStart == -1) {
+            return $this->fltTime;
+        }
+        return $this->fltTime + microtime(true) - $this->fltTimeStart;
+    }
 
-	// getters/setters
+    // getters/setters
 
-	// static stuff
-	/**
-	 * Array of QTime instances
-	 * @var Timer[]
-	 */
-	protected static $objTimerArray = array();
+    // static stuff
 
-	/**
-	 * Starts (new) timer with given name
-	 * @param string[optional] $strName Timer name
-	 * @return Timer
-	 */
-	public static function Start($strName = 'default') {
-		$objTimer = static::GetTimerInstance($strName);
-		return $objTimer->StartTimer();
-	}
+    /**
+     * Stops time for timer with given name
+     * @param string [optional] $strName Timer name
+     * @return float Timer's time
+     * @throws Caller
+     */
+    public static function Stop($strName = 'default')
+    {
+        $objTimer = static::GetTimerInstance($strName, false);
+        if ($objTimer) {
+            return $objTimer->StopTimer();
+        } else {
+            throw new Caller('Timer with name ' . $strName . ' was not started, cannot stop it');
+        }
+    }
 
-	/**
-	 * Gets time from timer with given name
-	 * @param string[optional] $strName Timer name
-	 * @return float Timer's time
-	 * @throws Caller
-	 */
-	public static function GetTime($strName = 'default') {
-		$objTimer = static::GetTimerInstance($strName, false);
-		if ($objTimer) {
-			return $objTimer->GetTimerTime();
-		} else {
-			throw new Caller('Timer with name ' . $strName . ' was not started, cannot get its value');
-		}
-	}
+    /**
+     * Stops timer. Saves current time for later usage
+     * @return float Timer's time
+     */
+    public function StopTimer()
+    {
+        $this->fltTime = $this->GetTimerTime();
+        $this->fltTimeStart = -1;
+        return $this->fltTime;
+    }
 
-	/**
-	 * Stops time for timer with given name
-	 * @param string[optional] $strName Timer name
-	 * @return float Timer's time
-	 * @throws Caller
-	 */
-	public static function Stop($strName = 'default') {
-		$objTimer = static::GetTimerInstance($strName, false);
-		if ($objTimer) {
-			return $objTimer->StopTimer();
-		} else {
-			throw new Caller('Timer with name ' . $strName . ' was not started, cannot stop it');
-		}
-	}
+    /**
+     * Resets timer with given name
+     * @param string [optional] $strName Timer name
+     * @return float Timer's time before reset or null if timer does not exist
+     */
+    public static function Reset($strName = 'default')
+    {
+        $objTimer = static::GetTimerInstance($strName, false);
+        if ($objTimer) {
+            return $objTimer->ResetTimer();
+        }
+        return null;
+    }
 
-	/**
-	 * Resets timer with given name
-	 * @param string[optional] $strName Timer name
-	 * @return float Timer's time before reset or null if timer does not exist
-	 */
-	public static function Reset($strName = 'default') {
-		$objTimer = static::GetTimerInstance($strName, false);
-		if ($objTimer) {
-			return $objTimer->ResetTimer();
-		}
-		return null;
-	}
+    /**
+     * Resets timer
+     * @return float Timer's time before reset
+     */
+    public function ResetTimer()
+    {
+        $fltTime = $this->StopTimer();
+        $this->fltTime = 0;
+        $this->StartTimer();
+        return $fltTime;
+    }
 
-	/**
-	 * Returns timer with a given name
-	 * @param string[optional] $strName Timer name
-	 * @return Timer or null if a timer was not found
-	 */
-	public static function GetTimer($strName = 'default') {
-		$objTimer = static::GetTimerInstance($strName, false);
-		if ($objTimer) {
-			return $objTimer;
-		}
+    /**
+     * Returns timer with a given name
+     * @param string [optional] $strName Timer name
+     * @return Timer or null if a timer was not found
+     */
+    public static function GetTimer($strName = 'default')
+    {
+        $objTimer = static::GetTimerInstance($strName, false);
+        if ($objTimer) {
+            return $objTimer;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	protected static function GetTimerInstance($strName, $blnCreateNew = true) {
-		if (!isset(static::$objTimerArray[$strName])) {
-			if ($blnCreateNew) {
-				static::$objTimerArray[$strName] = new Timer($strName);
-			} else {
-				return null;
-			}
-		}
-		return static::$objTimerArray[$strName];
-	}
+    /**
+     * Dumps all the timers and their info
+     * @param boolean [optional] $blnDisplayOutput If true (default), dump will be printed. If false, dump will be returned
+     * @return string
+     */
+    public static function VarDump($blnDisplayOutput = true)
+    {
+        $strToReturn = '';
+        foreach (static::$objTimerArray as $objTimer) {
+            $strToReturn .= $objTimer->__toString() . "\n";
+        }
+        if ($blnDisplayOutput) {
+            echo nl2br($strToReturn);
+            return '';
+        } else {
+            return $strToReturn;
+        }
+    }
 
-	// getters/setters?
+    /**
+     * Default toString method for timer
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s - start count: %s - execution time: %f",
+            $this->strName,
+            $this->intCountStarted,
+            $this->GetTimerTime());
+    }
 
-	/**
-	 * Dumps all the timers and their info
-	 * @param boolean[optional] $blnDisplayOutput If true (default), dump will be printed. If false, dump will be returned
-	 * @return string
-	 */
-	public static function VarDump($blnDisplayOutput = true) {
-		$strToReturn = '';
-		foreach (static::$objTimerArray as $objTimer) {
-			$strToReturn .= $objTimer->__toString() . "\n";
-		}
-		if ($blnDisplayOutput) {
-			echo nl2br($strToReturn);
-			return '';
-		} else {
-			return $strToReturn;
-		}
-	}
+    // getters/setters?
+
+    public function __get($strName)
+    {
+        switch ($strName) {
+            case 'CountStarted':
+                return $this->intCountStarted;
+            case 'TimeStart':
+                return $this->fltTimeStart;
+            default:
+                throw new Caller('Invalid property: $strName');
+        }
+    }
 }

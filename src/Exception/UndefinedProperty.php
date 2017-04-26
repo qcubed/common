@@ -19,11 +19,12 @@ class UndefinedProperty extends Caller
     /**
      * Constructor method
      * @param string $strType
-     * @param int    $strClass
+     * @param int $strClass
      * @param string $strProperty
      */
     public function __construct($strType, $strClass, $strProperty)
     {
-        parent::__construct(sprintf(Translator::translate("Undefined %s property or variable in '%s' class: %s"), $strType, $strClass, $strProperty), 2);
+        parent::__construct(sprintf(Translator::translate("Undefined %s property or variable in '%s' class: %s"),
+            $strType, $strClass, $strProperty), 2);
     }
 }

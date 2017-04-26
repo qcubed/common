@@ -16,20 +16,24 @@ namespace QCubed\Js;
  * @package QCubed\Js
  * @was QJsVarName
  */
-class VarName implements \JsonSerializable {
-	protected $strContent;
+class VarName implements \JsonSerializable
+{
+    protected $strContent;
 
-	public function __construct($strContent) {
-		$this->strContent = $strContent;
-	}
+    public function __construct($strContent)
+    {
+        $this->strContent = $strContent;
+    }
 
-	public function toJsObject() {
-		return $this->strContent;
-	}
+    public function toJsObject()
+    {
+        return $this->strContent;
+    }
 
-	public function jsonSerialize() {
-		$a[Helper::JSON_OBJECT_TYPE] = 'qVarName';
-		$a['varName'] = $this->strContent;
-		return Helper::MakeJsonEncodable($a);
-	}
+    public function jsonSerialize()
+    {
+        $a[Helper::JSON_OBJECT_TYPE] = 'qVarName';
+        $a['varName'] = $this->strContent;
+        return Helper::MakeJsonEncodable($a);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace QCubed;
+
 /**
  *
  * Part of the QCubed PHP framework.
@@ -15,11 +16,12 @@ namespace QCubed;
  * Encapsulates system-wide constants, utility functions, etc.
  */
 
-class QCubed {
+class QCubed
+{
 
-	// Constants coordinating with qcubed.js
-	const JSON_OBJECT_TYPE = 'qObjType';	// Indicates a PHP object we are serializing through the JsonSerialize interface
+    // Constants coordinating with qcubed.js
+    const JSON_OBJECT_TYPE = 'qObjType';    // Indicates a PHP object we are serializing through the JsonSerialize interface
 
-	// Database constants
-	const NAMED_VALUE_DELIMITER = 3;
+    // Database constants
+    const NAMED_VALUE_DELIMITER = 3;
 }

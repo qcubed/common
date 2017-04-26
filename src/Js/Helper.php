@@ -62,14 +62,6 @@ abstract class Helper
         );
     }
 
-    public static function jsEncodeString($objValue)
-    {
-        // default to string if not specified
-        static $search = array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"');
-        static $replace = array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
-        return '"' . str_replace($search, $replace, $objValue) . '"';
-    }
-
     /**
      * Recursively convert a php object to a javascript object.
      * If the $objValue is an object other than Date and has a toJsObject() method, the method will be called
@@ -146,6 +138,14 @@ abstract class Helper
 
         }
         return $strRet;
+    }
+
+    public static function jsEncodeString($objValue)
+    {
+        // default to string if not specified
+        static $search = array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"');
+        static $replace = array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"');
+        return '"' . str_replace($search, $replace, $objValue) . '"';
     }
 
     /**

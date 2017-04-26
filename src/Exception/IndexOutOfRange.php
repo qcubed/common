@@ -20,7 +20,7 @@ class IndexOutOfRange extends Caller
     /**
      * Constructor method
      * @param string $intIndex
-     * @param int    $strMessage
+     * @param int $strMessage
      */
     public function __construct($intIndex, $strMessage)
     {

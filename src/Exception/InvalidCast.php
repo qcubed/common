@@ -22,7 +22,7 @@ class InvalidCast extends Caller
     /**
      * Constructor
      * @param string $strMessage
-     * @param int    $intOffset
+     * @param int $intOffset
      */
     public function __construct($strMessage, $intOffset = 2)
     {
