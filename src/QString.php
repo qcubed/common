@@ -11,7 +11,6 @@ namespace QCubed;
 
 use QCubed\Exception\Caller;
 
-
 /**
  * Class QString
  *
@@ -26,7 +25,7 @@ abstract class QString
      *
      * @throws Caller
      */
-    public final function __construct()
+    final public function __construct()
     {
         throw new Caller('String should never be instantiated.  All methods and variables are publically statically accessible.');
     }
@@ -39,7 +38,7 @@ abstract class QString
      *
      * @return string the last character, or null
      */
-    public final static function LastCharacter($strString)
+    final public static function LastCharacter($strString)
     {
         if (defined('__APPLICATION_ENCODING_TYPE__')) {
             $intLength = mb_strlen($strString, __APPLICATION_ENCODING_TYPE__);
@@ -66,7 +65,7 @@ abstract class QString
      *
      * @return bool
      */
-    public final static function StartsWith($strHaystack, $strNeedle)
+    final public static function StartsWith($strHaystack, $strNeedle)
     {
         // If the length of needle is greater than the length of haystack, then return false
         if (strlen($strNeedle) > strlen($strHaystack)) {
@@ -86,7 +85,7 @@ abstract class QString
      *
      * @return bool
      */
-    public final static function EndsWith($strHaystack, $strNeedle)
+    final public static function EndsWith($strHaystack, $strNeedle)
     {
         // If the length of needle is greater than the length of haystack, then return false
         if (strlen($strNeedle) > strlen($strHaystack)) {
@@ -107,7 +106,7 @@ abstract class QString
      *
      * @return string the full string or the truncated string with eplise
      */
-    public final static function Truncate($strText, $intMaxLength)
+    final public static function Truncate($strText, $intMaxLength)
     {
         if (mb_strlen($strText, __APPLICATION_ENCODING_TYPE__) > $intMaxLength) {
             return mb_substr($strText, 0, $intMaxLength - 3, __APPLICATION_ENCODING_TYPE__) . "...";
@@ -123,7 +122,7 @@ abstract class QString
      *
      * @return string the XML Node-safe String
      */
-    public final static function XmlEscape($strString)
+    final public static function XmlEscape($strString)
     {
         if ((mb_strpos($strString, '<', 0, __APPLICATION_ENCODING_TYPE__) !== false) ||
             (mb_strpos($strString, '&', 0, __APPLICATION_ENCODING_TYPE__) !== false)
@@ -136,7 +135,7 @@ abstract class QString
     }
 
 
-    public final static function LongestCommonSubsequence($str1, $str2)
+    final public static function LongestCommonSubsequence($str1, $str2)
     {
         if (defined('__APPLICATION_ENCODING_TYPE__')) {
             $str1Len = mb_strlen($str1, __APPLICATION_ENCODING_TYPE__);
@@ -167,11 +166,9 @@ abstract class QString
                 //check every combination of characters
                 if ($str1[$i] == $str2[$j]) {
                     //these are the same in both strings
-                    if ($i == 0 || $j == 0) //it's the first character, so it's clearly only 1 character long
-                    {
+                    if ($i == 0 || $j == 0) { //it's the first character, so it's clearly only 1 character long
                         $CSL[$i][$j] = 1;
-                    } else //it's one character longer than the string from the previous character
-                    {
+                    } else { //it's one character longer than the string from the previous character
                         $CSL[$i][$j] = $CSL[$i - 1][$j - 1] + 1;
                     }
 
@@ -182,8 +179,7 @@ abstract class QString
                         $ret = array();
                         //and then fall through to remember this new value
                     }
-                    if ($CSL[$i][$j] == $intLargestSize) //remember the largest string(s)
-                    {
+                    if ($CSL[$i][$j] == $intLargestSize) { //remember the largest string(s)
                         $ret[] = substr($str1, $i - $intLargestSize + 1, $intLargestSize);
                     }
                 }
@@ -248,7 +244,6 @@ abstract class QString
         if (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) > $intMaxLength ||
             (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) < $intMaxLength)
         ) {
-
             $strString = strip_tags($strString);
             $strString = preg_replace('/%([a-fA-F0-9][a-fA-F0-9])/', '--$1--', $strString); // Preserve escaped octets
             $strString = str_replace('%', '', $strString); // Remove percent signs that are not part of an octet
@@ -562,8 +557,7 @@ abstract class QString
         return substr(
             str_shuffle(
                 str_repeat($strCharacterSet, ceil($intLength / strlen($strCharacterSet)))
-            )
-            , 0, $intLength);
+            ), 0, $intLength);
     }
 
     /**
@@ -609,8 +603,7 @@ abstract class QString
             // If an upper case letter
             if ((ord($strChar) >= ord('A')) &&
                 (ord($strChar) <= ord('Z'))
-            ) // Add a Space
-            {
+            ) { // Add a Space
                 $strToReturn .= ' ' . $strChar;
             } // If a digit, and the previous character is NOT a digit
             else {
@@ -618,8 +611,7 @@ abstract class QString
                     (ord($strChar) <= ord('9')) &&
                     ((ord($strPrevChar) < ord('0')) ||
                         (ord($strPrevChar) > ord('9')))
-                ) // Add a space
-                {
+                ) { // Add a space
                     $strToReturn .= ' ' . $strChar;
                 } // If a letter, and the previous character is a digit
                 else {
@@ -627,12 +619,10 @@ abstract class QString
                         (ord(strtolower($strChar)) <= ord('z')) &&
                         (ord($strPrevChar) >= ord('0')) &&
                         (ord($strPrevChar) <= ord('9'))
-                    ) // Add a space
-                    {
+                    ) { // Add a space
                         $strToReturn .= ' ' . $strChar;
                     } // Otherwise
-                    else // Don't add a space
-                    {
+                    else { // Don't add a space
                         $strToReturn .= $strChar;
                     }
                 }
@@ -650,7 +640,7 @@ abstract class QString
      *
      * @return string the first character, or null
      */
-    public final static function FirstCharacter($strString)
+    final public static function FirstCharacter($strString)
     {
         if (defined('__APPLICATION_ENCODING_TYPE__')) {
             if (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) > 0) {
@@ -768,6 +758,4 @@ abstract class QString
     {
         return htmlentities($strText, ENT_COMPAT | ENT_HTML5, __APPLICATION_ENCODING_TYPE__);
     }
-
-
 }
