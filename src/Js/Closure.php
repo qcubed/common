@@ -56,6 +56,6 @@ class Closure implements \JsonSerializable
         $a[Helper::JSON_OBJECT_TYPE] = 'qClosure';
         $a['func'] = $this->strBody;
         $a['params'] = $this->strParamsArray;
-        return Helper::MakeJsonEncodable($a);
+        return Helper::makeJsonEncodable($a);
     }
 }

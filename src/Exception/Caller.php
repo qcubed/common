@@ -34,7 +34,7 @@ namespace QCubed\Exception;
  *
  * So the code snippet to call InnerMethod by OuterMethod should look like:
  * <code>
- *    function OuterMethod($mixValue) {
+ *    function outerMethod($mixValue) {
  *        try {
  *            innerMethod($mixValue);
  *        } catch (CallerException $objExc) {

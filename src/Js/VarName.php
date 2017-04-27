@@ -34,6 +34,6 @@ class VarName implements \JsonSerializable
     {
         $a[Helper::JSON_OBJECT_TYPE] = 'qVarName';
         $a['varName'] = $this->strContent;
-        return Helper::MakeJsonEncodable($a);
+        return Helper::makeJsonEncodable($a);
     }
 }

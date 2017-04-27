@@ -38,7 +38,7 @@ abstract class QString
      *
      * @return string the last character, or null
      */
-    final public static function LastCharacter($strString)
+    final public static function lastCharacter($strString)
     {
         if (defined('__APPLICATION_ENCODING_TYPE__')) {
             $intLength = mb_strlen($strString, __APPLICATION_ENCODING_TYPE__);
@@ -65,7 +65,7 @@ abstract class QString
      *
      * @return bool
      */
-    final public static function StartsWith($strHaystack, $strNeedle)
+    final public static function startsWith($strHaystack, $strNeedle)
     {
         // If the length of needle is greater than the length of haystack, then return false
         if (strlen($strNeedle) > strlen($strHaystack)) {
@@ -85,7 +85,7 @@ abstract class QString
      *
      * @return bool
      */
-    final public static function EndsWith($strHaystack, $strNeedle)
+    final public static function endsWith($strHaystack, $strNeedle)
     {
         // If the length of needle is greater than the length of haystack, then return false
         if (strlen($strNeedle) > strlen($strHaystack)) {
@@ -106,7 +106,7 @@ abstract class QString
      *
      * @return string the full string or the truncated string with eplise
      */
-    final public static function Truncate($strText, $intMaxLength)
+    final public static function truncate($strText, $intMaxLength)
     {
         if (mb_strlen($strText, __APPLICATION_ENCODING_TYPE__) > $intMaxLength) {
             return mb_substr($strText, 0, $intMaxLength - 3, __APPLICATION_ENCODING_TYPE__) . "...";
@@ -122,7 +122,7 @@ abstract class QString
      *
      * @return string the XML Node-safe String
      */
-    final public static function XmlEscape($strString)
+    final public static function xmlEscape($strString)
     {
         if ((mb_strpos($strString, '<', 0, __APPLICATION_ENCODING_TYPE__) !== false) ||
             (mb_strpos($strString, '&', 0, __APPLICATION_ENCODING_TYPE__) !== false)
@@ -135,7 +135,7 @@ abstract class QString
     }
 
 
-    final public static function LongestCommonSubsequence($str1, $str2)
+    final public static function longestCommonSubsequence($str1, $str2)
     {
         if (defined('__APPLICATION_ENCODING_TYPE__')) {
             $str1Len = mb_strlen($str1, __APPLICATION_ENCODING_TYPE__);
@@ -208,7 +208,7 @@ abstract class QString
      * @param $s
      * @return mixed
      */
-    public static function Base64UrlSafeEncode($s)
+    public static function base64UrlSafeEncode($s)
     {
         $s = base64_encode($s);
         $s = str_replace('+', '-', $s);
@@ -223,7 +223,7 @@ abstract class QString
      * @param $s
      * @return mixed
      */
-    public static function Base64UrlSafeDecode($s)
+    public static function base64UrlSafeDecode($s)
     {
         $s = str_replace('_', '/', $s);
         $s = str_replace('-', '+', $s);
@@ -239,7 +239,7 @@ abstract class QString
      *
      * @return string the slug-generated string
      */
-    public static function SanitizeForUrl($strString = '', $intMaxLength = null)
+    public static function sanitizeForUrl($strString = '', $intMaxLength = null)
     {
         if (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) > $intMaxLength ||
             (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) < $intMaxLength)
@@ -249,7 +249,7 @@ abstract class QString
             $strString = str_replace('%', '', $strString); // Remove percent signs that are not part of an octet
             $strString = preg_replace('/--([a-fA-F0-9][a-fA-F0-9])--/', '%$1', $strString);  // Restore octets
 
-            $strString = QString::RemoveAccents($strString);
+            $strString = QString::removeAccents($strString);
 
             $strString = mb_convert_case($strString, MB_CASE_LOWER, "UTF-8");
             $strString = preg_replace('/&.+?;/', '', $strString); // Kill entities
@@ -276,13 +276,13 @@ abstract class QString
      * @param string $strString string
      * @return string
      */
-    public static function RemoveAccents($strString)
+    public static function removeAccents($strString)
     {
         if (!preg_match('/[\x80-\xff]/', $strString)) {
             return $strString;
         }
 
-        if (self::IsUtf8($strString)) {
+        if (self::isUtf8($strString)) {
             $chars = array(
                 // Decompositions for Latin-1 Supplement
                 chr(195) . chr(128) => 'A',
@@ -514,7 +514,7 @@ abstract class QString
      * @param string $strString string
      * @return string
      */
-    public static function IsUtf8($strString)
+    public static function isUtf8($strString)
     {
         return preg_match('%^(?:
 
@@ -538,13 +538,13 @@ abstract class QString
      * @return string The generated Random string
      * @throws Caller
      */
-    public static function GetRandomString(
+    public static function getRandomString(
         $intLength,
         $strCharacterSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     ) {
         // Cast in case there were something else
-        $intLength = Type::Cast($intLength, Type::Integer);
-        $strCharacterSet = Type::Cast($strCharacterSet, Type::String);
+        $intLength = Type::cast($intLength, Type::INTEGER);
+        $strCharacterSet = Type::cast($strCharacterSet, Type::STRING);
 
         if ($intLength < 1) {
             throw new Caller('Cannot generate a random string of zero length');
@@ -568,7 +568,7 @@ abstract class QString
      * @return string The resulting string (as words)
      * @was QConvertNotation::WordsFromUnderscore
      */
-    public static function WordsFromUnderscore($strName)
+    public static function wordsFromUnderscore($strName)
     {
         $strToReturn = trim(str_replace('_', ' ', $strName));
         if (strtolower($strToReturn) == $strToReturn) {
@@ -585,13 +585,13 @@ abstract class QString
      * @return string Resulting set of words derived from camel case
      * @was QConvertNotation::WordsFromCamelCase
      */
-    public static function WordsFromCamelCase($strName)
+    public static function wordsFromCamelCase($strName)
     {
         if (strlen($strName) == 0) {
             return '';
         }
 
-        $strToReturn = QString::FirstCharacter($strName);
+        $strToReturn = QString::firstCharacter($strName);
 
         for ($intIndex = 1; $intIndex < strlen($strName); $intIndex++) {
             // Get the current character we're examining
@@ -640,7 +640,7 @@ abstract class QString
      *
      * @return string the first character, or null
      */
-    final public static function FirstCharacter($strString)
+    final public static function firstCharacter($strString)
     {
         if (defined('__APPLICATION_ENCODING_TYPE__')) {
             if (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) > 0) {
@@ -668,13 +668,13 @@ abstract class QString
      * @return string Underscored word
      * @was QConvertNotation::UnderscoreFromCamelCase
      */
-    public static function UnderscoreFromCamelCase($strName)
+    public static function underscoreFromCamelCase($strName)
     {
         if (strlen($strName) == 0) {
             return '';
         }
 
-        $strToReturn = self::FirstCharacter($strName);
+        $strToReturn = self::firstCharacter($strName);
 
         for ($intIndex = 1; $intIndex < strlen($strName); $intIndex++) {
             $strChar = substr($strName, $intIndex, 1);
@@ -701,9 +701,9 @@ abstract class QString
      * @return string The word in javaCase
      * @was QConvertNotation::JavaCaseFromUnderscore
      */
-    public static function JavaCaseFromUnderscore($strName)
+    public static function javaCaseFromUnderscore($strName)
     {
-        $strToReturn = self::CamelCaseFromUnderscore($strName);
+        $strToReturn = self::camelCaseFromUnderscore($strName);
         return strtolower(substr($strToReturn, 0, 1)) . substr($strToReturn, 1);
     }
 
@@ -715,7 +715,7 @@ abstract class QString
      * @return string The resulting camel-cased word
      * @was QConvertNotation::CamelCaseFromUnderscore
      */
-    public static function CamelCaseFromUnderscore($strName)
+    public static function camelCaseFromUnderscore($strName)
     {
         $strToReturn = '';
 
@@ -754,7 +754,7 @@ abstract class QString
      * @return string the html escaped string
      * @was QApplication::HtmlEntities
      */
-    public static function HtmlEntities($strText)
+    public static function htmlEntities($strText)
     {
         return htmlentities($strText, ENT_COMPAT | ENT_HTML5, __APPLICATION_ENCODING_TYPE__);
     }

@@ -28,7 +28,7 @@ class Folder
      *
      * @return         boolean        the return flag from mkdir
      */
-    public static function MakeDirectory($strPath, $intMode = null)
+    public static function makeDirectory($strPath, $intMode = null)
     {
         if (is_dir($strPath)) {
             // Directory Already Exists
@@ -36,7 +36,7 @@ class Folder
         }
 
         // Check to make sure the parent(s) exist, or create if not
-        if (!self::MakeDirectory(dirname($strPath), $intMode)) {
+        if (!self::makeDirectory(dirname($strPath), $intMode)) {
             return false;
         }
 
@@ -48,9 +48,9 @@ class Folder
                 // Manually CHMOD to $intMode (if applicable)
                 // mkdir doesn't do it for mac, and this will error on windows
                 // Therefore, ignore any errors that creep up
-                ErrorHandler::Set(null);
+                ErrorHandler::set(null);
                 chmod($strPath, $intMode);
-                ErrorHandler::Restore();
+                ErrorHandler::restore();
             }
         } else {
             $blnReturn = mkdir($strPath, $intMode);
@@ -67,7 +67,7 @@ class Folder
      *
      * @return    int    number of deleted files
      */
-    public static function DeleteFolder($strPath)
+    public static function deleteFolder($strPath)
     {
         if (!is_dir($strPath)) {
             unlink($strPath);
@@ -80,7 +80,7 @@ class Folder
         while ($entry = $d->read()) {
             if ($entry != "." && $entry != "..") {
                 if (is_dir($strPath)) {
-                    $count += Folder::DeleteFolder($strPath . "/" . $entry);
+                    $count += Folder::deleteFolder($strPath . "/" . $entry);
                 }
             }
         }

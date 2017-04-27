@@ -77,6 +77,6 @@ class Func implements \JsonSerializable
             $a['params'] = $this->params;
         }
 
-        return Helper::MakeJsonEncodable($a);
+        return Helper::makeJsonEncodable($a);
     }
 }

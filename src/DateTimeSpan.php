@@ -11,6 +11,8 @@ namespace QCubed;
 
 use QCubed\Exception\Caller;
 
+require_once (dirname(__DIR__) . '/i18n/i18n-lib.inc.php');
+
 /**
  * Class DateTimeSpan: This class is used to calculate the time difference between two dates (including time)
  *
@@ -25,7 +27,7 @@ use QCubed\Exception\Caller;
 class DateTimeSpan extends AbstractBase
 {
     /** Number of seconds in an year */
-    const SecondsPerYear = 31556926;
+    const SECONDS_PER_YEAR = 31556926;
 
     /* From: http://tycho.usno.navy.mil/leapsec.html:
         This definition was ratified by the Eleventh General Conference on Weights and Measures in 1960.
@@ -35,15 +37,15 @@ class DateTimeSpan extends AbstractBase
         bodies into accord with the Newtonian dynamical theory of motion.
     */
     /** Number of seconds in a month (assuming 30 days in a month) */
-    const SecondsPerMonth = 2592000;
+    const SECONDS_PER_MONTH = 2592000;
 
     // Assume 30 Days per Month
     /** Number of seconds per day */
-    const SecondsPerDay = 86400;
+    const SECONDS_PER_DAY = 86400;
     /** Number of seconds in an hour */
-    const SecondsPerHour = 3600;
+    const SECONDS_PER_HOUR = 3600;
     /** Number of seconds per minute */
-    const SecondsPerMinute = 60;
+    const SECONDS_PER_MINUTE = 60;
     /** @var int Seconds variable which will be used to calculate the timespan */
     protected $intSeconds;
 
@@ -66,7 +68,7 @@ class DateTimeSpan extends AbstractBase
      *
      * @return boolean
      */
-    public function IsZero()
+    public function isZero()
     {
         return ($this->intSeconds == 0);
     }
@@ -77,11 +79,11 @@ class DateTimeSpan extends AbstractBase
      * @param DateTimeSpan $dtsSpan
      * @return DateTimeSpan
      */
-    public function Difference(DateTimeSpan $dtsSpan)
+    public function difference(DateTimeSpan $dtsSpan)
     {
         $intDifference = $this->Seconds - $dtsSpan->Seconds;
         $dtsDateSpan = new DateTimeSpan();
-        $dtsDateSpan->AddSeconds($intDifference);
+        $dtsDateSpan->addSeconds($intDifference);
         return $dtsDateSpan;
     }
 
@@ -90,7 +92,7 @@ class DateTimeSpan extends AbstractBase
      *
      * @param int $intSeconds
      */
-    public function AddSeconds($intSeconds)
+    public function addSeconds($intSeconds)
     {
         $this->intSeconds = $this->intSeconds + $intSeconds;
     }
@@ -101,9 +103,9 @@ class DateTimeSpan extends AbstractBase
      * @param QDateTime $dttFrom
      * @param QDateTime $dttTo
      */
-    public function SetFromQDateTime(QDateTime $dttFrom, QDateTime $dttTo)
+    public function setFromQDateTime(QDateTime $dttFrom, QDateTime $dttTo)
     {
-        $this->Add($dttFrom->Difference($dttTo));
+        $this->add($dttFrom->difference($dttTo));
     }
 
     /*
@@ -115,7 +117,7 @@ class DateTimeSpan extends AbstractBase
      *
      * @param DateTimeSpan $dtsSpan
      */
-    public function Add(DateTimeSpan $dtsSpan)
+    public function add(DateTimeSpan $dtsSpan)
     {
         $this->intSeconds = $this->intSeconds + $dtsSpan->Seconds;
     }
@@ -129,9 +131,9 @@ class DateTimeSpan extends AbstractBase
      *
      * @param int $intMinutes
      */
-    public function AddMinutes($intMinutes)
+    public function addMinutes($intMinutes)
     {
-        $this->intSeconds = $this->intSeconds + ($intMinutes * DateTimeSpan::SecondsPerMinute);
+        $this->intSeconds = $this->intSeconds + ($intMinutes * DateTimeSpan::SECONDS_PER_MINUTE);
     }
 
     /**
@@ -139,9 +141,9 @@ class DateTimeSpan extends AbstractBase
      *
      * @param int $intHours
      */
-    public function AddHours($intHours)
+    public function addHours($intHours)
     {
-        $this->intSeconds = $this->intSeconds + ($intHours * DateTimeSpan::SecondsPerHour);
+        $this->intSeconds = $this->intSeconds + ($intHours * DateTimeSpan::SECONDS_PER_HOUR);
     }
 
     /**
@@ -149,9 +151,9 @@ class DateTimeSpan extends AbstractBase
      *
      * @param int $intDays
      */
-    public function AddDays($intDays)
+    public function addDays($intDays)
     {
-        $this->intSeconds = $this->intSeconds + ($intDays * DateTimeSpan::SecondsPerDay);
+        $this->intSeconds = $this->intSeconds + ($intDays * DateTimeSpan::SECONDS_PER_DAY);
     }
 
     /**
@@ -159,9 +161,9 @@ class DateTimeSpan extends AbstractBase
      *
      * @param int $intMonths
      */
-    public function AddMonths($intMonths)
+    public function addMonths($intMonths)
     {
-        $this->intSeconds = $this->intSeconds + ($intMonths * DateTimeSpan::SecondsPerMonth);
+        $this->intSeconds = $this->intSeconds + ($intMonths * DateTimeSpan::SECONDS_PER_MONTH);
     }
 
     /**
@@ -169,7 +171,7 @@ class DateTimeSpan extends AbstractBase
      *
      * @param DateTimeSpan $dtsSpan
      */
-    public function Subtract(DateTimeSpan $dtsSpan)
+    public function subtract(DateTimeSpan $dtsSpan)
     {
         $this->intSeconds = $this->intSeconds - $dtsSpan->Seconds;
     }
@@ -186,28 +188,28 @@ class DateTimeSpan extends AbstractBase
      *
      * @return null|string
      */
-    public function SimpleDisplay()
+    public function simpleDisplay()
     {
-        $arrTimearray = $this->GetTimearray();
+        $arrTimearray = $this->getTimearray();
         $strToReturn = null;
 
         if ($arrTimearray['Years'] != 0) {
-            $strFormat = ($arrTimearray['Years'] != 1) ? Translator::translate('about %s years') : Translator::translate('a year');
+            $strFormat = tp('a year', 'about %s years', $arrTimearray['Years']);
             $strToReturn = sprintf($strFormat, $arrTimearray['Years']);
         } elseif ($arrTimearray['Months'] != 0) {
-            $strFormat = ($arrTimearray['Months'] != 1) ? Translator::translate('about %s months') : Translator::translate('a month');
+            $strFormat = tp('a month', 'about %s months', $arrTimearray['Months']);
             $strToReturn = sprintf($strFormat, $arrTimearray['Months']);
         } elseif ($arrTimearray['Days'] != 0) {
-            $strFormat = ($arrTimearray['Days'] != 1) ? Translator::translate('about %s days') : Translator::translate('a day');
+            $strFormat = tp('a day', 'about %s days', $arrTimearray['Days']);
             $strToReturn = sprintf($strFormat, $arrTimearray['Days']);
         } elseif ($arrTimearray['Hours'] != 0) {
-            $strFormat = ($arrTimearray['Hours'] != 1) ? Translator::translate('about %s hours') : Translator::translate('an hour');
+            $strFormat = tp('an hour', 'about %s hours', $arrTimearray['Hours']);
             $strToReturn = sprintf($strFormat, $arrTimearray['Hours']);
         } elseif ($arrTimearray['Minutes'] != 0) {
-            $strFormat = ($arrTimearray['Minutes'] != 1) ? Translator::translate('%s minutes') : Translator::translate('a minute');
+            $strFormat = tp('a minute', '%s minutes', $arrTimearray['Minutes']);
             $strToReturn = sprintf($strFormat, $arrTimearray['Minutes']);
         } elseif ($arrTimearray['Seconds'] != 0) {
-            $strFormat = ($arrTimearray['Seconds'] != 1) ? Translator::translate('%s seconds') : Translator::translate('a second');
+            $strFormat = tp('a second', '%s seconds', $arrTimearray['Seconds']);
             $strToReturn = sprintf($strFormat, $arrTimearray['Seconds']);
         }
 
@@ -219,26 +221,26 @@ class DateTimeSpan extends AbstractBase
      *
      * @return array of timeunits
      */
-    protected function GetTimearray()
+    protected function getTimearray()
     {
         $intSeconds = abs($this->intSeconds);
 
-        $intYears = floor($intSeconds / DateTimeSpan::SecondsPerYear);
-        $intSeconds = $intSeconds - ($intYears * DateTimeSpan::SecondsPerYear);
+        $intYears = floor($intSeconds / DateTimeSpan::SECONDS_PER_YEAR);
+        $intSeconds = $intSeconds - ($intYears * DateTimeSpan::SECONDS_PER_YEAR);
 
-        $intMonths = floor($intSeconds / DateTimeSpan::SecondsPerMonth);
-        $intSeconds = $intSeconds - ($intMonths * DateTimeSpan::SecondsPerMonth);
+        $intMonths = floor($intSeconds / DateTimeSpan::SECONDS_PER_MONTH);
+        $intSeconds = $intSeconds - ($intMonths * DateTimeSpan::SECONDS_PER_MONTH);
 
-        $intDays = floor($intSeconds / DateTimeSpan::SecondsPerDay);
-        $intSeconds = $intSeconds - ($intDays * DateTimeSpan::SecondsPerDay);
+        $intDays = floor($intSeconds / DateTimeSpan::SECONDS_PER_DAY);
+        $intSeconds = $intSeconds - ($intDays * DateTimeSpan::SECONDS_PER_DAY);
 
-        $intHours = floor($intSeconds / DateTimeSpan::SecondsPerHour);
-        $intSeconds = $intSeconds - ($intHours * DateTimeSpan::SecondsPerHour);
+        $intHours = floor($intSeconds / DateTimeSpan::SECONDS_PER_HOUR);
+        $intSeconds = $intSeconds - ($intHours * DateTimeSpan::SECONDS_PER_HOUR);
 
-        $intMinutes = floor($intSeconds / DateTimeSpan::SecondsPerMinute);
-        $intSeconds = $intSeconds - ($intMinutes * DateTimeSpan::SecondsPerMinute);
+        $intMinutes = floor($intSeconds / DateTimeSpan::SECONDS_PER_MINUTE);
+        $intSeconds = $intSeconds - ($intMinutes * DateTimeSpan::SECONDS_PER_MINUTE);
 
-        if ($this->IsNegative()) {
+        if ($this->isNegative()) {
             // Turn values to negative
             $intYears = ((-1) * $intYears);
             $intMonths = ((-1) * $intMonths);
@@ -263,7 +265,7 @@ class DateTimeSpan extends AbstractBase
      *
      * @return boolean
      */
-    public function IsNegative()
+    public function isNegative()
     {
         return ($this->intSeconds < 0);
     }
@@ -283,25 +285,25 @@ class DateTimeSpan extends AbstractBase
     {
         switch ($strName) {
             case 'Years':
-                return $this->GetYears();
+                return $this->getYears();
             case 'Months':
-                return $this->GetMonths();
+                return $this->getMonths();
             case 'Days':
-                return $this->GetDays();
+                return $this->getDays();
             case 'Hours':
-                return $this->GetHours();
+                return $this->getHours();
             case 'Minutes':
-                return $this->GetMinutes();
+                return $this->getMinutes();
             case 'Seconds':
                 return $this->intSeconds;
             case 'Timearray':
-                return ($this->GetTimearray());
+                return ($this->getTimearray());
 
             default:
                 try {
                     return parent::__get($strName);
                 } catch (Caller $objExc) {
-                    $objExc->IncrementOffset();
+                    $objExc->incrementOffset();
                     throw $objExc;
                 }
         }
@@ -324,12 +326,12 @@ class DateTimeSpan extends AbstractBase
         try {
             switch ($strName) {
                 case 'Seconds':
-                    return ($this->intSeconds = Type::Cast($mixValue, Type::Integer));
+                    return ($this->intSeconds = Type::cast($mixValue, Type::INTEGER));
                 default:
                     return (parent::__set($strName, $mixValue));
             }
         } catch (Caller $objExc) {
-            $objExc->IncrementOffset();
+            $objExc->incrementOffset();
             throw $objExc;
         }
     }
@@ -343,11 +345,11 @@ class DateTimeSpan extends AbstractBase
      *
      * @return int
      */
-    protected function GetYears()
+    protected function getYears()
     {
-        $intSecondsPerYear = ($this->IsPositive()) ? DateTimeSpan::SecondsPerYear : ((-1) * DateTimeSpan::SecondsPerYear);
+        $intSecondsPerYear = ($this->isPositive()) ? DateTimeSpan::SECONDS_PER_YEAR : ((-1) * DateTimeSpan::SECONDS_PER_YEAR);
         $intYears = floor($this->intSeconds / $intSecondsPerYear);
-        if ($this->IsNegative()) {
+        if ($this->isNegative()) {
             $intYears = (-1) * $intYears;
         }
         return $intYears;
@@ -358,7 +360,7 @@ class DateTimeSpan extends AbstractBase
      *
      * @return boolean
      */
-    public function IsPositive()
+    public function isPositive()
     {
         return ($this->intSeconds > 0);
     }
@@ -368,11 +370,11 @@ class DateTimeSpan extends AbstractBase
      *
      * @return int
      */
-    protected function GetMonths()
+    protected function getMonths()
     {
-        $intSecondsPerMonth = ($this->IsPositive()) ? DateTimeSpan::SecondsPerMonth : ((-1) * DateTimeSpan::SecondsPerMonth);
+        $intSecondsPerMonth = ($this->isPositive()) ? DateTimeSpan::SECONDS_PER_MONTH : ((-1) * DateTimeSpan::SECONDS_PER_MONTH);
         $intMonths = floor($this->intSeconds / $intSecondsPerMonth);
-        if ($this->IsNegative()) {
+        if ($this->isNegative()) {
             $intMonths = (-1) * $intMonths;
         }
         return $intMonths;
@@ -383,11 +385,11 @@ class DateTimeSpan extends AbstractBase
      *
      * @return int
      */
-    protected function GetDays()
+    protected function getDays()
     {
-        $intSecondsPerDay = ($this->IsPositive()) ? DateTimeSpan::SecondsPerDay : ((-1) * DateTimeSpan::SecondsPerDay);
+        $intSecondsPerDay = ($this->isPositive()) ? DateTimeSpan::SECONDS_PER_DAY : ((-1) * DateTimeSpan::SECONDS_PER_DAY);
         $intDays = floor($this->intSeconds / $intSecondsPerDay);
-        if ($this->IsNegative()) {
+        if ($this->isNegative()) {
             $intDays = (-1) * $intDays;
         }
         return $intDays;
@@ -398,11 +400,11 @@ class DateTimeSpan extends AbstractBase
      *
      * @return int
      */
-    protected function GetHours()
+    protected function getHours()
     {
-        $intSecondsPerHour = ($this->IsPositive()) ? DateTimeSpan::SecondsPerHour : ((-1) * DateTimeSpan::SecondsPerHour);
+        $intSecondsPerHour = ($this->isPositive()) ? DateTimeSpan::SECONDS_PER_HOUR : ((-1) * DateTimeSpan::SECONDS_PER_HOUR);
         $intHours = floor($this->intSeconds / $intSecondsPerHour);
-        if ($this->IsNegative()) {
+        if ($this->isNegative()) {
             $intHours = (-1) * $intHours;
         }
         return $intHours;
@@ -413,11 +415,11 @@ class DateTimeSpan extends AbstractBase
      *
      * @return int
      */
-    protected function GetMinutes()
+    protected function getMinutes()
     {
-        $intSecondsPerMinute = ($this->IsPositive()) ? DateTimeSpan::SecondsPerMinute : ((-1) * DateTimeSpan::SecondsPerMinute);
+        $intSecondsPerMinute = ($this->isPositive()) ? DateTimeSpan::SECONDS_PER_MINUTE : ((-1) * DateTimeSpan::SECONDS_PER_MINUTE);
         $intMinutes = floor($this->intSeconds / $intSecondsPerMinute);
-        if ($this->IsNegative()) {
+        if ($this->isNegative()) {
             $intMinutes = (-1) * $intMinutes;
         }
         return $intMinutes;

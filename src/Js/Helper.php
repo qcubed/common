@@ -159,7 +159,7 @@ abstract class Helper
     public static function toJSON($objValue)
     {
         assert('is_array($objValue) || is_object($objValue)');    // json spec says only arrays or objects can be encoded
-        $objValue = self::MakeJsonEncodable($objValue);
+        $objValue = self::makeJsonEncodable($objValue);
         $strRet = json_encode($objValue);
         if ($strRet === false) {
             throw new Caller('Json Encoding Error: ' . json_last_error_msg());

@@ -8,8 +8,6 @@
 
 namespace QCubed\Exception;
 
-use QCubed\Translator;
-
 /**
  * Thrown when trying to access an element in an array whose index does not exist
  * NOTE: this exception will not fire automatically for you unless you use it with the try-catch block
@@ -27,6 +25,6 @@ class IndexOutOfRange extends Caller
         if ($strMessage) {
             $strMessage = ": " . $strMessage;
         }
-        parent::__construct(sprintf(Translator::translate("Index (%s) is out of range%s"), $intIndex, $strMessage), 2);
+        parent::__construct(sprintf("Index (%s) is out of range%s", $intIndex, $strMessage), 2);
     }
 }

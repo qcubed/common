@@ -8,8 +8,6 @@
 
 namespace QCubed\Exception;
 
-use QCubed\Translator;
-
 /**
  * Thrown when a particular property of class is not defined and we try to access it
  * @was QUndefinedPropertyException
@@ -24,7 +22,7 @@ class UndefinedProperty extends Caller
      */
     public function __construct($strType, $strClass, $strProperty)
     {
-        parent::__construct(sprintf(Translator::translate("Undefined %s property or variable in '%s' class: %s"),
+        parent::__construct(sprintf("Undefined %s property or variable in '%s' class: %s",
             $strType, $strClass, $strProperty), 2);
     }
 }

@@ -62,6 +62,8 @@ abstract class File
      * NOTE: use a trailing slash for folders!!!
      * See http://bugs.php.net/bug.php?id=27609 AND http://bugs.php.net/bug.php?id=30931
      * Source: <http://www.php.net/is_writable#73596>
+     * @param $path
+     * @return bool
      */
     public static function isWritable($path)
     {

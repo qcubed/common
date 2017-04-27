@@ -62,7 +62,7 @@ class Timer
      * @return $this
      * @throws Caller
      */
-    public function StartTimer()
+    public function startTimer()
     {
         if ($this->fltTimeStart != -1) {
             throw new Caller("Timer was already started");
@@ -77,13 +77,13 @@ class Timer
      * @param string [optional] $strName Timer name
      * @return Timer
      */
-    public static function Start($strName = 'default')
+    public static function start($strName = 'default')
     {
-        $objTimer = static::GetTimerInstance($strName);
-        return $objTimer->StartTimer();
+        $objTimer = static::getTimerInstance($strName);
+        return $objTimer->startTimer();
     }
 
-    protected static function GetTimerInstance($strName, $blnCreateNew = true)
+    protected static function getTimerInstance($strName, $blnCreateNew = true)
     {
         if (!isset(static::$objTimerArray[$strName])) {
             if ($blnCreateNew) {
@@ -101,11 +101,11 @@ class Timer
      * @return float Timer's time
      * @throws Caller
      */
-    public static function GetTime($strName = 'default')
+    public static function getTime($strName = 'default')
     {
-        $objTimer = static::GetTimerInstance($strName, false);
+        $objTimer = static::getTimerInstance($strName, false);
         if ($objTimer) {
-            return $objTimer->GetTimerTime();
+            return $objTimer->getTimerTime();
         } else {
             throw new Caller('Timer with name ' . $strName . ' was not started, cannot get its value');
         }
@@ -115,7 +115,7 @@ class Timer
      * Returns timer's time
      * @return float Timer's time. If timer is not running, returns saved time.
      */
-    public function GetTimerTime()
+    public function getTimerTime()
     {
         if ($this->fltTimeStart == -1) {
             return $this->fltTime;
@@ -133,11 +133,11 @@ class Timer
      * @return float Timer's time
      * @throws Caller
      */
-    public static function Stop($strName = 'default')
+    public static function stop($strName = 'default')
     {
-        $objTimer = static::GetTimerInstance($strName, false);
+        $objTimer = static::getTimerInstance($strName, false);
         if ($objTimer) {
-            return $objTimer->StopTimer();
+            return $objTimer->stopTimer();
         } else {
             throw new Caller('Timer with name ' . $strName . ' was not started, cannot stop it');
         }
@@ -147,9 +147,9 @@ class Timer
      * Stops timer. Saves current time for later usage
      * @return float Timer's time
      */
-    public function StopTimer()
+    public function stopTimer()
     {
-        $this->fltTime = $this->GetTimerTime();
+        $this->fltTime = $this->getTimerTime();
         $this->fltTimeStart = -1;
         return $this->fltTime;
     }
@@ -159,11 +159,11 @@ class Timer
      * @param string [optional] $strName Timer name
      * @return float Timer's time before reset or null if timer does not exist
      */
-    public static function Reset($strName = 'default')
+    public static function reset($strName = 'default')
     {
-        $objTimer = static::GetTimerInstance($strName, false);
+        $objTimer = static::getTimerInstance($strName, false);
         if ($objTimer) {
-            return $objTimer->ResetTimer();
+            return $objTimer->resetTimer();
         }
         return null;
     }
@@ -172,11 +172,11 @@ class Timer
      * Resets timer
      * @return float Timer's time before reset
      */
-    public function ResetTimer()
+    public function resetTimer()
     {
-        $fltTime = $this->StopTimer();
+        $fltTime = $this->stopTimer();
         $this->fltTime = 0;
-        $this->StartTimer();
+        $this->startTimer();
         return $fltTime;
     }
 
@@ -185,9 +185,9 @@ class Timer
      * @param string [optional] $strName Timer name
      * @return Timer or null if a timer was not found
      */
-    public static function GetTimer($strName = 'default')
+    public static function getTimer($strName = 'default')
     {
-        $objTimer = static::GetTimerInstance($strName, false);
+        $objTimer = static::getTimerInstance($strName, false);
         if ($objTimer) {
             return $objTimer;
         }
@@ -200,7 +200,7 @@ class Timer
      * @param boolean [optional] $blnDisplayOutput If true (default), dump will be printed. If false, dump will be returned
      * @return string
      */
-    public static function VarDump($blnDisplayOutput = true)
+    public static function varDump($blnDisplayOutput = true)
     {
         $strToReturn = '';
         foreach (static::$objTimerArray as $objTimer) {
@@ -223,7 +223,7 @@ class Timer
         return sprintf("%s - start count: %s - execution time: %f",
             $this->strName,
             $this->intCountStarted,
-            $this->GetTimerTime());
+            $this->getTimerTime());
     }
 
     // getters/setters?

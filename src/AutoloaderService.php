@@ -76,7 +76,7 @@ class AutoloaderService
      * Add a classmap, which is an array where keys are the all lowercase name of a class, and
      * the value is the absolute path to the file that holds that class.
      *
-     * @param $classmap
+     * @param array $classmap
      * @return $this
      */
     public function addClassmap($classmap)
@@ -88,7 +88,7 @@ class AutoloaderService
     /**
      * Add a php file that returns a classmap.
      *
-     * @param $strPath
+     * @param string $strPath
      * @return $this
      */
     public function addClassmapFile($strPath)
@@ -119,8 +119,8 @@ class AutoloaderService
      *
      * TODO: If we do not have a composer autoloader, recursively search the directory and add all the classes found.
      *
-     * @param $strClass
-     * @param $strPath
+     * @param string $strPrefix
+     * @param string $strPath
      * @return $this
      */
     public function addPsr4($strPrefix, $strPath)

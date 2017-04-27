@@ -14,11 +14,11 @@ abstract class UnitTestCaseBase extends \PHPUnit_Framework_TestCase
      * there is an object inside with a property $strPropertyName
      * that equals $mixExpectedValue.
      *
-     * @param $arrObj Array of objects to look through
-     * @param $strPropertyName Name of the property to validate each item on
-     * @param $mixExpectedValue Value of the property to look for
+     * @param array $arrObj Array of objects to look through
+     * @param string $strPropertyName Name of the property to validate each item on
+     * @param mixed $mixExpectedValue Value of the property to look for
      *
-     * @return $mixObject The object in the array that had the property value we were looking for
+     * @return mixed The object in the array that had the property value we were looking for
      */
     protected function verifyObjectPropertyHelper($arrObj, $strPropertyName, $mixExpectedValue)
     {

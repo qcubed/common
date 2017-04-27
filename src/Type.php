@@ -35,8 +35,8 @@ use QCubed\Exception\InvalidCast;
  * and you have a ChildClass that extends ParentClass,
  *        $objChildClass = new ChildClass();
  *        $objParentClass = new ParentClass();
- *        Type::Cast($objChildClass, 'ParentClass'); // is a legal cast
- *        Type::Cast($objParentClass, 'ChildClass'); // will throw an InvalidCastException
+ *        Type::cast($objChildClass, 'ParentClass'); // is a legal cast
+ *        Type::cast($objParentClass, 'ChildClass'); // will throw an InvalidCastException
  *
  * For values, specifically int to string conversion, one different between
  * Type::Cast and PHP (in order to add structure) is that if an integer contains
@@ -49,36 +49,28 @@ use QCubed\Exception\InvalidCast;
  * PHP developers are accostomed to, while providing a mechanism to limit
  * careless coding errors and tough to figure out mistakes due to PHP's sometimes
  * overly laxed type conversions.
+ * @was QType
  */
 class Type
 {
-    /** String Type */
-    const String = 'string';
-    /** Integer Type */
-    const Integer = 'integer';
-    /** Float Type */
-    const Float = 'double';
-    /** Boolean Type */
-    const Boolean = 'boolean';
-    /** Object Type */
-    const Object = 'object';
-    /** Array Type */
-    const ArrayType = 'array';
-    /** QDateTime type */
-    const DateTime = 'QDateTime';
-    /** Resource Type */
-    const Resource = 'resource';
-    /** Callable Type  - Note: For QCubed, Type::CallableTypes CANNOT be Closures (because they cannot be serialized into the form state) */
-    const CallableType = 'callable';
-    const Association = 'association';
+    const STRING = 'string';
+    const INTEGER = 'integer';
+    const FLOAT = 'double';
+    const BOOLEAN = 'boolean';
+    const OBJECT = 'object';
+    const ARRAY_TYPE = 'array';
+    const DATE_TIME = 'QDateTime';
+    const RESOURCE = 'resource';
+    const CALLABLE_TYPE = 'callable'; // Callable Type  - Note: For QCubed, Type::CALLABLE_TYPEs CANNOT be Closures (because they cannot be serialized into the form state)
+    const ASSOCIATION = 'association';
 
     // Virtual types
-    const ReverseReference = 'reverse_reference';
-    const NoOp = 1;
-    const CheckOnly = 2;
-    const CastOnly = 3;
-    const CheckAndCast = 4;
-    private static $intBehaviour = Type::CheckAndCast;
+    const REVERSE_REFERENCE = 'reverse_reference';
+    const NO_OP = 1;
+    const CHECK_ONLY = 2;
+    const CAST_ONLY = 3;
+    const CHECK_AND_CAST = 4;
+    private static $intBehaviour = Type::CHECK_AND_CAST;
 
     /**
      * This faux constructor method throws a caller exception.
@@ -94,16 +86,16 @@ class Type
     }
 
     /**
-     * This method can be used to change the casting behaviour of Type::Cast().
-     * By default Type::Cast() does lots of validation and type casting (using settype()).
+     * This method can be used to change the casting behaviour of Type::cast().
+     * By default Type::cast() does lots of validation and type casting (using settype()).
      * Depending on your application you may or may not need validation or casting or both.
      * In these situations you can set the necessary behaviour by passing the appropriate constant to this function.
      *
      * @static
-     * @param int $intBehaviour one of the 4 constants Type::NoOp, Type::CastOnly, Type::CheckOnly, Type::CheckAndCast
+     * @param int $intBehaviour one of the 4 constants Type::NO_OP, Type::CAST_ONLY, Type::CHECK_ONLY, Type::CHECK_AND_CAST
      * @return int the previous setting
      */
-    public static function SetBehaviour($intBehaviour)
+    public static function setBehaviour($intBehaviour)
     {
         $oldBehaviour = Type::$intBehaviour;
         Type::$intBehaviour = $intBehaviour;
@@ -121,24 +113,24 @@ class Type
      * @return string the text of the Text:Xxx Constant
      * @throws InvalidCast
      */
-    public final static function Constant($strType)
+    public final static function constant($strType)
     {
         switch ($strType) {
-            case Type::Object:
-                return 'Type::Object';
-            case Type::String:
-                return 'Type::String';
-            case Type::Integer:
-                return 'Type::Integer';
-            case Type::Float:
-                return 'Type::Float';
-            case Type::Boolean:
-                return 'Type::Boolean';
-            case Type::ArrayType:
-                return 'Type::ArrayType';
-            case Type::Resource:
-                return 'Type::Resource';
-            case Type::DateTime:
+            case Type::OBJECT:
+                return 'Type::OBJECT';
+            case Type::STRING:
+                return 'Type::STRING';
+            case Type::INTEGER:
+                return 'Type::INTEGER';
+            case Type::FLOAT:
+                return 'Type::FLOAT';
+            case Type::BOOLEAN:
+                return 'Type::BOOLEAN';
+            case Type::ARRAY_TYPE:
+                return 'Type::ARRAY_TYPE';
+            case Type::RESOURCE:
+                return 'Type::RESOURCE';
+            case Type::DATE_TIME:
                 return 'Type::QDateTime';
 
             default:
@@ -156,46 +148,46 @@ class Type
      * @return string the text of the SOAP standard s:type variable type
      * @throws InvalidCast
      */
-    public final static function SoapType($strType)
+    public final static function soapType($strType)
     {
         switch ($strType) {
-            case Type::String:
+            case Type::STRING:
                 return 'string';
-            case Type::Integer:
+            case Type::INTEGER:
                 return 'int';
-            case Type::Float:
+            case Type::FLOAT:
                 return 'float';
-            case Type::Boolean:
+            case Type::BOOLEAN:
                 return 'boolean';
-            case Type::DateTime:
+            case Type::DATE_TIME:
                 return 'dateTime';
 
-            case Type::ArrayType:
-            case Type::Object:
-            case Type::Resource:
+            case Type::ARRAY_TYPE:
+            case Type::OBJECT:
+            case Type::RESOURCE:
             default:
                 // Could not determine type
                 throw new InvalidCast(sprintf('Unable to determine type of item to lookup its constant: %s', $strType));
         }
     }
 
-    private static function CastObjectTo($objItem, $strType)
+    private static function castObjectTo($objItem, $strType)
     {
         try {
             $objReflection = new \ReflectionClass($objItem);
             $strObjName = $objReflection->getName();
             if ($strObjName == 'SimpleXMLElement') {
                 switch ($strType) {
-                    case Type::String:
+                    case Type::STRING:
                         return (string)$objItem;
-                    case Type::Integer:
+                    case Type::INTEGER:
                         try {
-                            return Type::Cast((string)$objItem, Type::Integer);
+                            return Type::cast((string)$objItem, Type::INTEGER);
                         } catch (Caller $objExc) {
-                            $objExc->IncrementOffset();
+                            $objExc->incrementOffset();
                             throw $objExc;
                         }
-                    case Type::Boolean:
+                    case Type::BOOLEAN:
                         $strItem = strtolower(trim((string)$objItem));
                         if (($strItem == 'false') ||
                             (!$strItem)
@@ -206,7 +198,7 @@ class Type
                         }
                 }
             } elseif ($strObjName == 'Closure') {
-                if ($strType == Type::CallableType) {
+                if ($strType == Type::CALLABLE_TYPE) {
                     throw new \Exception("Can't use a closure here"); // will get rethrown below, but this will error to
                     // prevent you from accidentally sending a Closure to a callable in a form object.
                     // that cannot be done, because Closures are not serializable. Some other forms of
@@ -218,7 +210,7 @@ class Type
                 return $objItem;
             }
 
-            if ($strType == Type::String) {
+            if ($strType == Type::STRING) {
                 return (string)$objItem;    // invokes __toString() magic method
             }
         } catch (\Exception $objExc) {
@@ -236,23 +228,23 @@ class Type
      * thrown will be an InvalidCastException, which extends CallerException.
      *
      * @param mixed $mixItem the value, array or object that you want to cast
-     * @param string $strType the type to cast to.  Can be a Type::XXX constant (e.g. Type::Integer), or the name of a Class
+     * @param string $strType the type to cast to.  Can be a Type::XXX constant (e.g. Type::INTEGER), or the name of a Class
      *
      * @return mixed the passed in value/array/object that has been cast to strType
      * @throws \Exception|Caller|InvalidCast
      */
-    public final static function Cast($mixItem, $strType)
+    public final static function cast($mixItem, $strType)
     {
         switch (Type::$intBehaviour) {
-            case Type::NoOp:
+            case Type::NO_OP:
                 return $mixItem;
-            case Type::CastOnly:
-                throw new Caller("Type::CastOnly handling not yet implemented");
+            case Type::CAST_ONLY:
+                throw new Caller("Type::CAST_ONLY handling not yet implemented");
                 break;
-            case Type::CheckOnly:
-                throw new Caller("Type::CheckOnly handling not yet implemented");
+            case Type::CHECK_ONLY:
+                throw new Caller("Type::CHECK_ONLY handling not yet implemented");
                 break;
-            case Type::CheckAndCast:
+            case Type::CHECK_AND_CAST:
                 break;
             default:
                 throw new \Exception('Unknown Type behavior');
@@ -267,34 +259,34 @@ class Type
         $strPhpType = gettype($mixItem);
 
         switch ($strPhpType) {
-            case Type::Object:
+            case Type::OBJECT:
                 try {
-                    return Type::CastObjectTo($mixItem, $strType);
+                    return Type::castObjectTo($mixItem, $strType);
                 } catch (Caller $objExc) {
-                    $objExc->IncrementOffset();
+                    $objExc->incrementOffset();
                     throw $objExc;
                 }
 
-            case Type::String:
-            case Type::Integer:
-            case Type::Float:
-            case Type::Boolean:
+            case Type::STRING:
+            case Type::INTEGER:
+            case Type::FLOAT:
+            case Type::BOOLEAN:
                 try {
-                    return Type::CastValueTo($mixItem, $strType);
+                    return Type::castValueTo($mixItem, $strType);
                 } catch (Caller $objExc) {
-                    $objExc->IncrementOffset();
+                    $objExc->incrementOffset();
                     throw $objExc;
                 }
 
-            case Type::ArrayType:
+            case Type::ARRAY_TYPE:
                 try {
-                    return Type::CastArrayTo($mixItem, $strType);
+                    return Type::castArrayTo($mixItem, $strType);
                 } catch (Caller $objExc) {
-                    $objExc->IncrementOffset();
+                    $objExc->incrementOffset();
                     throw $objExc;
                 }
 
-            case Type::Resource:
+            case Type::RESOURCE:
                 // Cannot Cast Resources
                 throw new InvalidCast('Resources cannot be cast');
 
@@ -304,13 +296,13 @@ class Type
         }
     }
 
-    private static function CastValueTo($mixItem, $strNewType)
+    private static function castValueTo($mixItem, $strNewType)
     {
         $strOriginalType = gettype($mixItem);
 
-        switch (Type::TypeFromDoc($strNewType)) {
-            case Type::Boolean:
-                if ($strOriginalType == Type::Boolean) {
+        switch (Type::typeFromDoc($strNewType)) {
+            case Type::BOOLEAN:
+                if ($strOriginalType == Type::BOOLEAN) {
                     return $mixItem;
                 }
                 if (is_null($mixItem)) {
@@ -325,15 +317,15 @@ class Type
                 settype($mixItem, $strNewType);
                 return $mixItem;
 
-            case Type::Integer:
-                if ($strOriginalType == Type::Boolean) {
+            case Type::INTEGER:
+                if ($strOriginalType == Type::BOOLEAN) {
                     throw new InvalidCast(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType,
                         $mixItem));
                 }
                 if (strlen($mixItem) == 0) {
                     return null;
                 }
-                if ($strOriginalType == Type::Integer) {
+                if ($strOriginalType == Type::INTEGER) {
                     return $mixItem;
                 }
 
@@ -356,15 +348,15 @@ class Type
                 // any other scenarios is an invalid cast
                 throw new InvalidCast(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType,
                     $mixItem));
-            case Type::Float:
-                if ($strOriginalType == Type::Boolean) {
+            case Type::FLOAT:
+                if ($strOriginalType == Type::BOOLEAN) {
                     throw new InvalidCast(sprintf('Unable to cast %s value to %s: %s', $strOriginalType, $strNewType,
                         $mixItem));
                 }
                 if (strlen($mixItem) == 0) {
                     return null;
                 }
-                if ($strOriginalType == Type::Float) {
+                if ($strOriginalType == Type::FLOAT) {
                     return $mixItem;
                 }
 
@@ -393,8 +385,8 @@ class Type
                 // the changed value could be the result of loosing precision. Return the original value with no cast
                 return $mixItem;
 
-            case Type::String:
-                if ($strOriginalType == Type::String) {
+            case Type::STRING:
+                if ($strOriginalType == Type::STRING) {
                     return $mixItem;
                 }
 
@@ -406,7 +398,7 @@ class Type
 
                 // Has it?
                 $blnSame = true;
-                if ($strOriginalType == Type::Float) {
+                if ($strOriginalType == Type::FLOAT) {
                     // type conversion from float to string affects precision and can throw off the comparison
                     // so we need to use a comparison check using an epsilon value instead
                     //$epsilon = 1.0e-14; too small
@@ -428,7 +420,7 @@ class Type
 
                 return $strItem;
 
-            case Type::CallableType:
+            case Type::CALLABLE_TYPE:
                 if (is_callable($mixItem)) {
                     return $mixItem;
                 } else {
@@ -441,16 +433,16 @@ class Type
         }
     }
 
-    public final static function TypeFromDoc($strType)
+    public final static function typeFromDoc($strType)
     {
         switch (strtolower($strType)) {
             case 'string':
             case 'str':
-                return Type::String;
+                return Type::STRING;
 
             case 'integer':
             case 'int':
-                return Type::Integer;
+                return Type::INTEGER;
 
             case 'float':
             case 'flt':
@@ -458,21 +450,21 @@ class Type
             case 'dbl':
             case 'single':
             case 'decimal':
-                return Type::Float;
+                return Type::FLOAT;
 
             case 'bool':
             case 'boolean':
             case 'bit':
-                return Type::Boolean;
+                return Type::BOOLEAN;
 
             case 'datetime':
             case 'date':
             case 'time':
             case 'qdatetime':
-                return Type::DateTime;
+                return Type::DATE_TIME;
 
             case 'callable':
-                return Type::CallableType;
+                return Type::CALLABLE_TYPE;
 
             case 'null':
             case 'void':
@@ -498,61 +490,61 @@ class Type
      * @return array
      * @throws InvalidCast
      */
-    private static function CastArrayTo($arrItem, $strType)
+    private static function castArrayTo($arrItem, $strType)
     {
-        if ($strType == Type::ArrayType) {
+        if ($strType == Type::ARRAY_TYPE) {
             return $arrItem;
-        } elseif ($strType == Type::CallableType && is_callable($arrItem)) {
+        } elseif ($strType == Type::CALLABLE_TYPE && is_callable($arrItem)) {
             return $arrItem;
         } else {
             throw new InvalidCast(sprintf('Unable to cast Array to %s', $strType));
         }
     }
     /*
-        final public static function SoapArrayType($strType) {
+        final public static function soapArrayType($strType) {
             try {
-                return sprintf('ArrayOf%s', ucfirst(Type::SoapType($strType)));
+                return sprintf('ArrayOf%s', ucfirst(Type::soapType($strType)));
             } catch (InvalidCast $objExc) {}
-                $objExc->IncrementOffset();
+                $objExc->incrementOffset();
                 throw $objExc;
             }
         }
 
-        final public static function AlterSoapComplexTypeArray(&$strComplexTypeArray, $strType) {
+        final public static function alterSoapComplexTypeArray(&$strComplexTypeArray, $strType) {
             switch ($strType) {
-                case Type::String:
+                case Type::STRING:
                     $strItemName = 'string';
                     break;
-                case Type::Integer:
+                case Type::INTEGER:
                     $strItemName = 'int';
                     break;
-                case Type::Float:
+                case Type::FLOAT:
                     $strItemName = 'float';
                     break;
-                case Type::Boolean:
+                case Type::BOOLEAN:
                     $strItemName = 'boolean';
                     break;
                 case Type::QDateTime:
                     $strItemName = 'dateTime';
                     break;
 
-                case Type::ArrayType:
-                case Type::Object:
-                case Type::Resource:
+                case Type::ARRAY_TYPE:
+                case Type::OBJECT:
+                case Type::RESOURCE:
                 default:
                     // Could not determine type
                     throw new InvalidCast(sprintf('Unable to determine type of item to lookup its constant: %s', $strType));
             }
 
-            $strArrayName = Type::SoapArrayType($strType);
+            $strArrayName = Type::soapArrayType($strType);
 
             if (!array_key_exists($strArrayName, $strComplexTypeArray))
                 $strComplexTypeArray[$strArrayName] = sprintf(
                     '<s:complexType name="%s"><s:sequence>' .
                     '<s:element minOccurs="0" maxOccurs="unbounded" name="%s" type="%s"/>' .
                     '</s:sequence></s:complexType>',
-                    Type::SoapArrayType($strType),
+                    Type::soapArrayType($strType),
                     $strItemName,
-                    Type::SoapType($strType));
+                    Type::soapType($strType));
         }*/
 }
