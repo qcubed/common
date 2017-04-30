@@ -28,16 +28,52 @@
  * Process a script from the gen_sed command
  */
 
-if (count($argv) != 3) {
-    echo 'Usage: run_sed patternFile outFile';
+if (count($argv) < 3) {
+    echo 'Usage: run_sed [-R] patternFile outFile(s)';
 }
 
-$strFile = file_get_contents($argv[2]);
+$options = getopt('R');
+$blnRecursive = isset($options['R']);
 
-$patterns = include ($argv[1]);
+$files = $argv;
+array_shift($files);
+for($i = 0; $i < count($options); $i++) {
+    array_shift($files);
+}
+$patterns = include (array_shift($files));
 
 
-$newFile = preg_replace(array_keys($patterns), array_values($patterns), $strFile);
 
-file_put_contents($argv[2], $newFile);
-?>
+function processFile($file) {
+    global $patterns;
+
+    $strFile = file_get_contents($file);
+
+    $newFile = preg_replace(array_keys($patterns), array_values($patterns), $strFile);
+
+    file_put_contents($file, $newFile);
+}
+
+function processFiles($files) {
+    global $blnRecursive;
+
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            if ($file != '.' &&
+                $file != '..' &&
+                $blnRecursive)
+            {
+                $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($file));
+                $filter = new RegexIterator($objects, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+                foreach ($filter as $name=>$object) {
+                    processFile($name);
+                }
+            }
+        } else {
+            processFile($file);
+        }
+    }
+}
+
+processFiles($files);
+

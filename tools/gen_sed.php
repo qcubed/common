@@ -45,7 +45,10 @@ if (count($argv) > 2) {
     echo 'Usage: gen_sed dir';
 }
 
-require dirname(dirname(dirname(dirname(__FILE__)))) . '/autoload.php'; // load superclasses
+$__CONFIG_ONLY__ = true;
+include 'qcubed.inc.php';
+$loader = require dirname(dirname(dirname(__DIR__))) . '/autoload.php'; // load superclasses
+$loader->addPsr4('QCubed\\', dirname(__DIR__) . '/src'); // make sure I am included
 
 // convert upper case name to camel name
 function CamelName($uname) {
