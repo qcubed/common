@@ -26,23 +26,24 @@
 
 /**
  * Command line script to recursively processes the given directory and outputs a PHP array
- * to send to the run_sed command that will help convert QCubed 3.1 code to QCubed 4.0 code.
+ * to send to the run_sed command that will help convert QCubed 3.x code to QCubed 4.0 code.
  * I originally tried to do this with sed for speed, but sed works differently on different OS's, so I am doing
  * it in PHP for consistency across OS's.
  *
  * Specifically this does the following:
  * - Hunts for @was docblock comments and makes a substituion for the new namespaced version of the function.
  * - Hunts for constants, and makes a substitution for a PascalCase version of the constant to the new constant.
+ * - Outputs a var_dump format that can recreate the array of substitutions
  *
- * Use the resulting SED script carefully. Be sure to backup previous versions and compare changes before accepting them.
+ * Use the resulting script carefully. Be sure to backup previous versions and compare changes before accepting them.
  *
  * The resulting script will be sent to stdout, so its expected you capture stdout to save it.
  *
- * Usage: gen_sed dir > filename
+ * Usage: gen_was dir > filename
  */
 
 if (count($argv) > 2) {
-    echo 'Usage: gen_sed dir';
+    echo 'Usage: gen_was dir';
 }
 
 $__CONFIG_ONLY__ = true;
@@ -71,7 +72,7 @@ $classes = [];
 foreach($filter as $name => $object) {
     // Use file name as class name
     $classes[basename($name, '.php')] = true;
-    include ($name);
+    require_once ($name);
 }
 
 $a = get_declared_classes();    // get classes with namespace
@@ -88,7 +89,7 @@ echo ('<?php' . "\n");
 foreach ($a as $fullClassName) {
     $rc = new ReflectionClass($fullClassName);
     $comment = $rc->getDocComment();
-    $slashedClassName = addslashes(addslashes($fullClassName));
+    $slashedClassName = addslashes($fullClassName);
 
 
     if (preg_match('/@was (\w+)/', $comment, $matches)) {
@@ -96,19 +97,11 @@ foreach ($a as $fullClassName) {
         // use nowdoc to make an easy to see pattern
         // match a non-word letter, followed by an optional namespace specifier, followed by the class name, followed by a non-word letter
 
-        $pattern = <<<'PTRN'
-/(\W)(?:(?:\\\w+)*\\)*
-PTRN;
-        $pattern .= $was;
-        $pattern .= <<<'PTRN'
-(\W)/i
-PTRN;
-        $pattern = addslashes($pattern);
 
-        echo '$a[\'' . $pattern . '\'] = \'';
+        echo '$a["class"][\'' . $was . '\'] = \'\\\\';
 
 
-        echo '$1\\' . $slashedClassName . '$2';
+        echo $slashedClassName;
         echo "';\n";
     }
 
@@ -116,10 +109,10 @@ PTRN;
     $constants = $rc->getConstants();
     foreach ($constants as $constName=>$constValue) {
         $camelName = CamelName($constName);
-        $pattern = $slashedClassName . '::' . $camelName . '([^a-zA-Z0-9\\(])';
-        echo '$a[\'/' . $pattern . '/i\'] = \'';
+        $pattern = $slashedClassName . '::' . $camelName;
+        echo '$a["const"]["' . $pattern . '"] = "';
         echo $slashedClassName . '::' . $constName;
-        echo "\$1';\n";
+        echo "\";\n";
     }
 }
 
