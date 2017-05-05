@@ -3,7 +3,7 @@
  * Translation shortcuts specific to this library
  */
 
-namespace QCubed;	// include this file in your namespace so that the functions defined below are unique to your library
+namespace QCubed\Common;	// include this file in your namespace so that the functions defined below are unique to your library
 
 const I18N_DOMAIN = 'qcubed/common'; // replace this with your package name
 
@@ -20,7 +20,6 @@ function t($strMsgId, $strContext = null)
 		if (!defined (I18N_DOMAIN . '__BOUND')) {
 			define(I18N_DOMAIN . '__BOUND', 1);
 			\QCubed\I18n\TranslationService::instance()->bindDomain(I18N_DOMAIN, __DIR__);	// bind the directory containing the .po files to my domain
-
 		}
 		return \QCubed\I18n\TranslationService::instance()->translate($strMsgId, I18N_DOMAIN, $strContext);
 	}

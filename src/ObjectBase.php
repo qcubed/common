@@ -15,12 +15,15 @@ use QCubed\Exception\UndefinedMethod;
 use QCubed\Exception\UndefinedProperty;
 
 /**
- * This is the Base Class for ALL classes in the system.  It provides
+ * Class ObjectBase
+ *
+ * This is the Base class for ALL classes in the system.  It provides
  * proper error handling of property getters and setters.  It also
  * provides the overrideAttribute functionality.
  * @was QBaseClass
+ * @package QCubed
  */
-abstract class AbstractBase
+abstract class ObjectBase
 {
     /**
      * Override method to perform a property "Get"

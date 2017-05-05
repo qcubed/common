@@ -1,5 +1,5 @@
 <?php
-$a["class"]['QBaseClass'] = '\\QCubed\\AbstractBase';
+$a["class"]['QBaseClass'] = '\\QCubed\\ObjectBase';
 $a["class"]['QCryptography'] = '\\QCubed\\Cryptography';
 $a["const"]["QCubed\\Cryptography::IvRandom"] = "QCubed\\Cryptography::IV_RANDOM";
 $a["class"]['QDateTimeSpan'] = '\\QCubed\\DateTimeSpan';

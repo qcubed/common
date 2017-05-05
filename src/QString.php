@@ -758,4 +758,24 @@ abstract class QString
     {
         return htmlentities($strText, ENT_COMPAT | ENT_HTML5, __APPLICATION_ENCODING_TYPE__);
     }
+
+    /**
+     * Generates a valid URL Query String based on values in the provided array. If no array is provided, it uses the global $_GET.
+     *
+     * @param array $arr
+     * @return string
+     */
+    public static function generateQueryString($arr = null)
+    {
+        if (null === $arr && isset($_GET)) {
+            $arr = $_GET;
+        }
+        if (count($arr)) {
+            return '?' . http_build_query($arr);
+        } else {
+            return '';
+        }
+    }
+
+
 }

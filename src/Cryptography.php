@@ -43,7 +43,7 @@ use QCubed\Exception\Caller;
  * @package QCubed
  * @was QCryptography
  */
-class Cryptography extends AbstractBase
+class Cryptography extends ObjectBase
 {
     /**
      * Constant to indicate that Random IV is to be automatically generated.

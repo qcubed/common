@@ -15,7 +15,7 @@ namespace QCubed;
  * @package QCubed
  * @was QFolder
  */
-class Folder
+abstract class Folder
 {
     /**
      * Same as mkdir but correctly implements directory recursion.

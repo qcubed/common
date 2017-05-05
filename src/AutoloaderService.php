@@ -104,6 +104,7 @@ class AutoloaderService
      */
     public function autoload($strClassName)
     {
+        $strClassName = strtolower($strClassName);
         if (!empty($this->classmap[$strClassName])) {
             $strPath = $this->classmap[$strClassName];
             if (file_exists($strPath)) {
