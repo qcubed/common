@@ -10,6 +10,7 @@
 namespace QCubed;
 
 use QCubed\Exception\Caller;
+use QCubed as Q;
 
 /**
  * Class Cryptography
@@ -88,7 +89,7 @@ class Cryptography extends ObjectBase
      * 								  possible to decrypt the value if the IV is lost. See above discussion.
      *
      * @throws Caller
-     * @throws QCryptographyException
+     * @throws \Exception
      */
     public function __construct($strKey = null, $blnBase64 = null, $strCipher = null, $strIvHashKey = null)
     {
@@ -97,8 +98,8 @@ class Cryptography extends ObjectBase
 
         // Get the Key
         if (is_null($strKey)) {
-            if (!defined('QCRYPTOGRAPHY_DEFAULT_KEY')) {
-                throw new Exception('To use QCryptography, either pass in a key, or define QCRYPTOGRAPHY_DEFAULT_KEY in your config file');
+            if (!defined('QCUBED_CRYPTOGRAPHY_DEFAULT_KEY')) {
+                throw new \Exception('To use QCubed\\Cryptography, either pass in a key, or define QCUBED_CRYPTOGRAPHY_DEFAULT_KEY in your config file');
             }
             $this->strKey = QCRYPTOGRAPHY_DEFAULT_KEY;
         } else {
@@ -108,9 +109,9 @@ class Cryptography extends ObjectBase
         // Get the Base64 Flag
         try {
             if (is_null($blnBase64)) {
-                $this->blnBase64 = QType::cast(self::$Base64, QType::Boolean);
+                $this->blnBase64 = Type::cast(self::$Base64, Type::BOOLEAN);
             } else {
-                $this->blnBase64 = QType::cast($blnBase64, QType::Boolean);
+                $this->blnBase64 = Type::cast($blnBase64, Type::BOOLEAN);
             }
         } catch (Caller $objExc) {
             $objExc->incrementOffset();
@@ -118,8 +119,8 @@ class Cryptography extends ObjectBase
         }
 
         // Get the Cipher
-        if (defined('QCRYPTOGRAPHY_DEFAULT_CIPHER')) {
-            $this->strCipher = QCRYPTOGRAPHY_DEFAULT_CIPHER;
+        if (defined('QCUBED_CRYPTOGRAPHY_DEFAULT_CIPHER')) {
+            $this->strCipher = QCUBED_CRYPTOGRAPHY_DEFAULT_CIPHER;
         } elseif ($strCipher) {
             $this->strCipher = $strCipher;
         } else {
@@ -130,7 +131,7 @@ class Cryptography extends ObjectBase
         try {
             // The following method will automatically test for availability of the supplied cipher name
             $strIvLength = openssl_cipher_iv_length($this->strCipher);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new Caller('No Cipher with name ' . $this->strCipher . ' could be found in openssl library');
         }
 
@@ -148,7 +149,7 @@ class Cryptography extends ObjectBase
      * @param string $strData
      *
      * @return mixed|string
-     * @throws QCryptographyException
+     * @throws Q\Exception\Cryptography
      */
     public function encrypt($strData)
     {
@@ -182,7 +183,7 @@ class Cryptography extends ObjectBase
      * @param string $strEncryptedData
      *
      * @return string
-     * @throws QCryptographyException
+     * @throws Q\Exception\Cryptography
      */
     public function decrypt($strEncryptedData)
     {
@@ -193,7 +194,7 @@ class Cryptography extends ObjectBase
         if ($this->strIvHashKey) {
             $offset = strrpos($strEncryptedData, ":");
             if ($offset === null) {
-                throw new QCryptographyException("Hash value not found.");
+                throw new Q\Exception\Cryptography("Hash value not found.");
             }
             $hash1 = substr($strEncryptedData, $offset + 1);
             $strEncryptedData = substr($strEncryptedData, 0, $offset);
@@ -201,13 +202,13 @@ class Cryptography extends ObjectBase
             // check for tampering
             $hash2 = hash_hmac('sha256', $strEncryptedData, $this->strIvHashKey);
             if ($hash1 != $hash2) {
-                throw new QCryptographyException("Encryption tampering detected");
+                throw new Q\Exception\Cryptography("Encryption tampering detected");
             }
 
             $offset2 = strrpos($strEncryptedData, ":");
 
             if ($offset2 === null) {
-                throw new QCryptographyException("IV not found.");
+                throw new Q\Exception\Cryptography("IV not found.");
             }
             $strIv = substr($strEncryptedData, $offset2 + 1);
             $strIv = hex2bin($strIv);    // undo our serialization encoding
@@ -224,7 +225,7 @@ class Cryptography extends ObjectBase
      * @param string $strFile Path of the file to be encrypted
      *
      * @return mixed|string
-     * @throws Caller|QCryptographyException
+     * @throws Caller
      */
     public function encryptFile($strFile)
     {
@@ -243,7 +244,7 @@ class Cryptography extends ObjectBase
      * @param string $strFile File to be decrypted
      *
      * @return string
-     * @throws Caller|QCryptographyException
+     * @throws Caller
      */
     public function decryptFile($strFile)
     {
