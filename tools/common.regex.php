@@ -62,6 +62,7 @@ $a["const"]["QCubed\\Test\\HtmlReporter::ColorNever"] = "QCubed\\Test\\HtmlRepor
 $a["const"]["QCubed\\Test\\HtmlReporter::ColorAuto"] = "QCubed\\Test\\HtmlReporter::COLOR_AUTO";
 $a["const"]["QCubed\\Test\\HtmlReporter::ColorAlways"] = "QCubed\\Test\\HtmlReporter::COLOR_ALWAYS";
 $a["const"]["QCubed\\Test\\HtmlReporter::ColorDefault"] = "QCubed\\Test\\HtmlReporter::COLOR_DEFAULT";
+$a["class"]['QUnitTestCaseBase'] = '\\QCubed\\Test\\UnitTestCaseBase';
 $a["class"]['QTimer'] = '\\QCubed\\Timer';
 $a["class"]['QType'] = '\\QCubed\\Type';
 $a["const"]["QCubed\\Type::String"] = "QCubed\\Type::STRING";
