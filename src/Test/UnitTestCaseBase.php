@@ -5,6 +5,7 @@ namespace QCubed\Test;
 /**
  * Base class for all QCubed unit tests. Contains shared functionality.
  * @package Tests
+ * @was QUnitTestCaseBase
  */
 
 abstract class UnitTestCaseBase extends \PHPUnit_Framework_TestCase

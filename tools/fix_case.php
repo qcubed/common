@@ -29,9 +29,12 @@
  * It also converts case of const declarations to UPPER_CASE
  */
 
-if (count($argv) != 2) {
-    echo 'Usage: fix_case outFile';
+if (count($argv) < 2) {
+    echo 'Usage: fix_case [-R] outFile(s)';
 }
+
+$options = getopt('R');
+$blnRecursive = isset($options['R']);
 
 /**
  * Change constant name to UPPER_CASE format. It might already be there, so we should be careful.
@@ -45,50 +48,83 @@ function UCase($strConst)
     }
     return strtoupper(preg_replace('/(?<!^)[A-Z]/', '_$0', $strConst));
 }
+function processFile($file) {
+    if ($file == '.' || $file == '..') {
+        return;
+    }
 
-$strFile = file_get_contents($argv[1]);
+    $strFile = file_get_contents($file);
 
 // static function calls
-$newFile = preg_replace_callback(
-    '/::([A-Z])(\\w*)\\s*\\(/',
-    function ($matches) {
-        return '::' . strtolower($matches[1]) . $matches[2] . '(';
-    }, $strFile);
+    $newFile = preg_replace_callback(
+        '/::([A-Z])(\\w*)\\s*\\(/',
+        function ($matches) {
+            return '::' . strtolower($matches[1]) . $matches[2] . '(';
+        }, $strFile);
 
 // dynamic methods
-$newFile = preg_replace_callback(
-    '/->([A-Z])(\\w*)\\s*\\(/',
-    function ($matches) {
-        return '->' . strtolower($matches[1]) . $matches[2] . '(';
-    }, $newFile);
+    $newFile = preg_replace_callback(
+        '/->([A-Z])(\\w*)\\s*\\(/',
+        function ($matches) {
+            return '->' . strtolower($matches[1]) . $matches[2] . '(';
+        }, $newFile);
 
 // function declarations
-$newFile = preg_replace_callback(
-    '/function\\s+([A-Z])(\\w*)\\s*\\(/',
-    function ($matches) {
-        return 'function ' . strtolower($matches[1]) . $matches[2] . '(';
-    }, $newFile);
+    $newFile = preg_replace_callback(
+        '/function\\s+([A-Z])(\\w*)\\s*\\(/',
+        function ($matches) {
+            return 'function ' . strtolower($matches[1]) . $matches[2] . '(';
+        }, $newFile);
 
 // const declarations
-$a = [];
-$newFile = preg_replace_callback(
-    '/^(\\s*)const\\s+(\\w*)\\s*=/m',
-    function ($matches) use (&$a) {
-        // record a change we made
-        $a[$matches[2]] = UCase($matches[2]);
-        return $matches[1] .    // beginning spaces don't change
-            'const ' .
-            UCase($matches[2]) .
-            ' =';
-    }, $newFile);
+    $a = [];
+    $newFile = preg_replace_callback(
+        '/^(\\s*)const\\s+(\\w*)\\s*=/m',
+        function ($matches) use (&$a) {
+            // record a change we made
+            $a[$matches[2]] = UCase($matches[2]);
+            return $matches[1] .    // beginning spaces don't change
+                'const ' .
+                UCase($matches[2]) .
+                ' =';
+        }, $newFile);
 
 // Fix up all occurances of its own constants internally
-foreach ($a as $pattern => $rep) {
-    $newFile = preg_replace(
-        '/::' . $pattern . '/',
-        '::' . $rep, $newFile);
+    foreach ($a as $pattern => $rep) {
+        $newFile = preg_replace(
+            '/::' . $pattern . '/',
+            '::' . $rep, $newFile);
+    }
+
+    file_put_contents($file, $newFile);
+
 }
 
-file_put_contents($argv[1], $newFile);
+function processFiles($files) {
+    global $blnRecursive;
 
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            if ($file != '.' &&
+                $file != '..' &&
+                $blnRecursive)
+            {
+                $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($file));
+                $filter = new RegexIterator($objects, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+                foreach ($filter as $name=>$object) {
+                    processFile($name);
+                }
+            }
+        } else {
+            processFile($file);
+        }
+    }
+}
 
+$files = $argv;
+array_shift($files);
+for($i = 0; $i < count($options); $i++) {
+    array_shift($files);
+}
+
+processFiles($files);

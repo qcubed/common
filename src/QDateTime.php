@@ -13,6 +13,7 @@ namespace QCubed;
 use QCubed\Exception\Caller;
 use QCubed\Exception\InvalidCast;
 use QCubed\Exception\UndefinedProperty;
+use QCubed\Common\t;
 
 require_once (dirname(__DIR__) . '/i18n/i18n-lib.inc.php');
 

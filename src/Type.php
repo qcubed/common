@@ -59,7 +59,7 @@ class Type
     const BOOLEAN = 'boolean';
     const OBJECT = 'object';
     const ARRAY_TYPE = 'array';
-    const DATE_TIME = 'QDateTime';
+    const DATE_TIME = '\\QCubed\\QDateTime';
     const RESOURCE = 'resource';
     const CALLABLE_TYPE = 'callable'; // Callable Type  - Note: For QCubed, Type::CALLABLE_TYPEs CANNOT be Closures (because they cannot be serialized into the form state)
     const ASSOCIATION = 'association';
@@ -131,7 +131,7 @@ class Type
             case Type::RESOURCE:
                 return 'Type::RESOURCE';
             case Type::DATE_TIME:
-                return 'Type::QDateTime';
+                return 'Type::DATE_TIME';
 
             default:
                 // Could not determine type
@@ -524,7 +524,7 @@ class Type
                 case Type::BOOLEAN:
                     $strItemName = 'boolean';
                     break;
-                case Type::QDateTime:
+                case Type::DATE_TIME:
                     $strItemName = 'dateTime';
                     break;
 

@@ -159,6 +159,10 @@ class Caller extends \Exception
             case "TraceArray":
                 return $this->strTraceArray;
 
+            case "ErrorNumber":
+                return 0;   // If we get here, we just need to return a default value.
+
+
             default:
                 throw new \Exception("Unknown property " . $strName);
 

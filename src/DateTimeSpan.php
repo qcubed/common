@@ -24,7 +24,7 @@ require_once (dirname(__DIR__) . '/i18n/i18n-lib.inc.php');
  * @property int $Seconds Number seconds which correspond to the time difference
  * @was QDateTimeSpan
  */
-class DateTimeSpan extends AbstractBase
+class DateTimeSpan extends ObjectBase
 {
     /** Number of seconds in an year */
     const SECONDS_PER_YEAR = 31556926;
