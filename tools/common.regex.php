@@ -53,6 +53,7 @@ $a["const"]["QCubed\\QDateTime::Rfc2822"] = "QCubed\\QDateTime::RFC2822";
 $a["const"]["QCubed\\QDateTime::Rfc3339"] = "QCubed\\QDateTime::RFC3339";
 $a["const"]["QCubed\\QDateTime::Rss"] = "QCubed\\QDateTime::RSS";
 $a["const"]["QCubed\\QDateTime::W3c"] = "QCubed\\QDateTime::W3C";
+$a["class"]['QString'] = '\\QCubed\\QString';
 $a["const"]["QCubed\\Test\\HtmlReporter::EventTestStart"] = "QCubed\\Test\\HtmlReporter::EVENT_TEST_START";
 $a["const"]["QCubed\\Test\\HtmlReporter::EventTestEnd"] = "QCubed\\Test\\HtmlReporter::EVENT_TEST_END";
 $a["const"]["QCubed\\Test\\HtmlReporter::EventTestsuiteStart"] = "QCubed\\Test\\HtmlReporter::EVENT_TESTSUITE_START";

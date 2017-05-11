@@ -15,6 +15,7 @@ use QCubed\Exception\Caller;
  * Class QString
  *
  * String utilities
+ * @was QString
  */
 abstract class QString
 {
