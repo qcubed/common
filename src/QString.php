@@ -757,7 +757,13 @@ abstract class QString
      */
     public static function htmlEntities($strText)
     {
-        return htmlentities($strText, ENT_COMPAT | ENT_HTML5, __APPLICATION_ENCODING_TYPE__);
+        // Support the main application class if using a custom encoding
+        if (class_exists('\\QCubed\\Project\\Application')) {
+            $strEncoding = \QCubed\Project\Application::encodingType();
+        } else {
+            $strEncoding = __APPLICATION_ENCODING_TYPE__;
+        }
+        return htmlentities($strText, ENT_COMPAT | ENT_HTML5, $strEncoding);
     }
 
     /**
