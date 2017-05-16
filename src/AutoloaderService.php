@@ -131,4 +131,27 @@ class AutoloaderService
         }
         return $this;
     }
+
+    /**
+     * Given a class, returns the path to the file that contains that class.
+     *
+     * @param $strClass
+     * @return false|mixed|null|string
+     */
+    public function findFile($strClass)
+    {
+        if (isset($this->classmap[$strClass])) {
+            $strFile = $this->classmap[$strClass];
+        }
+        else {
+            $strFile = $this->composerAutoloader->findFile($strClass);
+        }
+
+        if ($strFile && file_exists($strFile)) {
+            return $strFile;
+        }
+        else {
+            return null;
+        }
+    }
 }

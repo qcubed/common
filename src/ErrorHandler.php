@@ -106,10 +106,10 @@ abstract class ErrorHandler
         }
 
         // Call to display the Error Page (as defined in configuration.inc.php)
-        if (defined('ERROR_PAGE_PATH')) {
-            require(__DOCROOT__ . ERROR_PAGE_PATH);
+        if (defined('QCUBED_ERROR_PAGE_PHP')) {
+            require(__DOCROOT__ . QCUBED_ERROR_PAGE_PHP);
         } else {
-            // Error in installer or similar - ERROR_PAGE_PATH constant is not defined yet.
+            // Error in installer or similar - QCUBED_ERROR_PAGE_PHP constant is not defined yet.
             echo "error: errno: " . $__exc_errno . "<br/>" . $__exc_strMessage . "<br/>" . $__exc_strFilename . ":" . $__exc_intLineNumber . "<br/>" . $__exc_strStackTrace;
         }
         if (!defined('HHVM_VERSION')) {
@@ -257,10 +257,10 @@ abstract class ErrorHandler
         }
 
         // Call to display the Error Page (as defined in configuration.inc.php)
-        if (defined('ERROR_PAGE_PATH')) {
-            require(__DOCROOT__ . ERROR_PAGE_PATH);
+        if (defined('QCUBED_ERROR_PAGE_PHP')) {
+            require(__DOCROOT__ . QCUBED_ERROR_PAGE_PHP);
         } else {
-            // Error in installer or similar - ERROR_PAGE_PATH constant is not defined yet.
+            // Error in installer or similar - QCUBED_ERROR_PAGE_PHP constant is not defined yet.
             echo "error: errno: " . $__exc_errno . "<br/>" . $__exc_errstr . "<br/>" . $__exc_errfile . ":" . $__exc_errline . "<br/>" . implode(', ',
                     $__exc_errcontext);
         }

@@ -187,4 +187,46 @@ abstract class Folder
 
         return $result;
     }
+
+    /**
+     * Copy the contents of the source directory into the destination directory, creating the destination directory
+     * and subdirectories if they do not exist. You can control whether to overwrite existing files or not.
+     *
+     * @param string $srcPath source directory
+     * @param string $dstPath destination directory
+     * @param boolean $blnOverwrite True to overwrite a file if it already exists. False to leave existing files alone.
+     */
+
+    public static function mergFolders($srcPath, $dstPath, $blnOverwrite)
+    {
+        if (!$srcPath || !is_dir($srcPath)) {
+            return;
+        }
+        $dir = opendir($srcPath);
+
+        try {
+            if (!file_exists($dstPath)) {
+                mkdir($dstPath);
+            }
+            while (false !== ($file = readdir($dir))) {
+                if (($file != '.') && ($file != '..')) {
+                    if (is_dir($srcPath . '/' . $file)) {
+                        self::copy_dir($srcPath . '/' . $file, $dstPath . '/' . $file, $blnOverwrite);
+                    } else {
+                        if ($blnOverwrite) {
+                            copy($srcPath . '/' . $file, $dstPath . '/' . $file);
+                        } else {
+
+                            if (!file_exists($dstPath . '/' . $file)) {
+                                copy($srcPath . '/' . $file, $dstPath . '/' . $file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        finally {
+            closedir($dir);
+        }
+    }
 }
