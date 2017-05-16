@@ -6,5 +6,5 @@ $loader = require dirname(dirname(dirname(dirname(__FILE__)))) . '/autoload.php'
 $strPackagePath =  dirname(__DIR__);
 $loader->addPsr4('QCubed\\', $strPackagePath . '/src');
 
-define ('__APPLICATION_ENCODING_TYPE__', 'UTF-8');
+define ('QCUBED_ENCODING', 'UTF-8');
 

@@ -5,4 +5,4 @@
  */
 require ('./vendor/autoload.php');
 
-define('__APPLICATION_ENCODING_TYPE__', 'UTF-8');
+define('QCUBED_ENCODING', 'UTF-8');
