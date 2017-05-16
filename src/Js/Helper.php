@@ -186,13 +186,13 @@ abstract class Helper
      */
     public static function makeJsonEncodable($objValue)
     {
-        if (__APPLICATION_ENCODING_TYPE__ == 'UTF-8') {
+        if (QCUBED_ENCODING == 'UTF-8') {
             return $objValue; // Nothing to do, since all strings are already UTF-8 and objects can take care of themselves.
         }
 
         switch (gettype($objValue)) {
             case 'string':
-                $objValue = mb_convert_encoding($objValue, 'UTF-8', __APPLICATION_ENCODING_TYPE__);
+                $objValue = mb_convert_encoding($objValue, 'UTF-8', QCUBED_ENCODING);
                 return $objValue;
 
             case 'array':

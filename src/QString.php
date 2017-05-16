@@ -41,10 +41,10 @@ abstract class QString
      */
     final public static function lastCharacter($strString)
     {
-        if (defined('__APPLICATION_ENCODING_TYPE__')) {
-            $intLength = mb_strlen($strString, __APPLICATION_ENCODING_TYPE__);
+        if (defined('QCUBED_ENCODING')) {
+            $intLength = mb_strlen($strString, QCUBED_ENCODING);
             if ($intLength > 0) {
-                return mb_substr($strString, $intLength - 1, 1, __APPLICATION_ENCODING_TYPE__);
+                return mb_substr($strString, $intLength - 1, 1, QCUBED_ENCODING);
             } else {
                 return null;
             }
@@ -109,8 +109,8 @@ abstract class QString
      */
     final public static function truncate($strText, $intMaxLength)
     {
-        if (mb_strlen($strText, __APPLICATION_ENCODING_TYPE__) > $intMaxLength) {
-            return mb_substr($strText, 0, $intMaxLength - 3, __APPLICATION_ENCODING_TYPE__) . "...";
+        if (mb_strlen($strText, QCUBED_ENCODING) > $intMaxLength) {
+            return mb_substr($strText, 0, $intMaxLength - 3, QCUBED_ENCODING) . "...";
         } else {
             return $strText;
         }
@@ -125,8 +125,8 @@ abstract class QString
      */
     final public static function xmlEscape($strString)
     {
-        if ((mb_strpos($strString, '<', 0, __APPLICATION_ENCODING_TYPE__) !== false) ||
-            (mb_strpos($strString, '&', 0, __APPLICATION_ENCODING_TYPE__) !== false)
+        if ((mb_strpos($strString, '<', 0, QCUBED_ENCODING) !== false) ||
+            (mb_strpos($strString, '&', 0, QCUBED_ENCODING) !== false)
         ) {
             $strString = str_replace(']]>', ']]]]><![CDATA[>', $strString);
             $strString = sprintf('<![CDATA[%s]]>', $strString);
@@ -138,9 +138,9 @@ abstract class QString
 
     final public static function longestCommonSubsequence($str1, $str2)
     {
-        if (defined('__APPLICATION_ENCODING_TYPE__')) {
-            $str1Len = mb_strlen($str1, __APPLICATION_ENCODING_TYPE__);
-            $str2Len = mb_strlen($str2, __APPLICATION_ENCODING_TYPE__);
+        if (defined('QCUBED_ENCODING')) {
+            $str1Len = mb_strlen($str1, QCUBED_ENCODING);
+            $str2Len = mb_strlen($str2, QCUBED_ENCODING);
         } else {
             $str1Len = strlen($str1);
             $str2Len = strlen($str2);
@@ -242,8 +242,8 @@ abstract class QString
      */
     public static function sanitizeForUrl($strString = '', $intMaxLength = null)
     {
-        if (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) > $intMaxLength ||
-            (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) < $intMaxLength)
+        if (mb_strlen($strString, QCUBED_ENCODING) > $intMaxLength ||
+            (mb_strlen($strString, QCUBED_ENCODING) < $intMaxLength)
         ) {
             $strString = strip_tags($strString);
             $strString = preg_replace('/%([a-fA-F0-9][a-fA-F0-9])/', '--$1--', $strString); // Preserve escaped octets
@@ -263,7 +263,7 @@ abstract class QString
             $strString = preg_replace('/-+/', '-', $strString); // Remove excess hyphens
             $strString = trim($strString, '-');
 
-            $strString = mb_substr($strString, 0, $intMaxLength, __APPLICATION_ENCODING_TYPE__);
+            $strString = mb_substr($strString, 0, $intMaxLength, QCUBED_ENCODING);
             return rtrim($strString, '-'); // When the end of the text remains the hyphen, it is removed.
             //This rtrim() starts implementing at the $intMaxLength.
         } else {
@@ -643,9 +643,9 @@ abstract class QString
      */
     final public static function firstCharacter($strString)
     {
-        if (defined('__APPLICATION_ENCODING_TYPE__')) {
-            if (mb_strlen($strString, __APPLICATION_ENCODING_TYPE__) > 0) {
-                return mb_substr($strString, 0, 1, __APPLICATION_ENCODING_TYPE__);
+        if (defined('QCUBED_ENCODING')) {
+            if (mb_strlen($strString, QCUBED_ENCODING) > 0) {
+                return mb_substr($strString, 0, 1, QCUBED_ENCODING);
             } else {
                 return null;
             }
@@ -761,7 +761,7 @@ abstract class QString
         if (class_exists('\\QCubed\\Project\\Application')) {
             $strEncoding = \QCubed\Project\Application::encodingType();
         } else {
-            $strEncoding = __APPLICATION_ENCODING_TYPE__;
+            $strEncoding = QCUBED_ENCODING;
         }
         return htmlentities($strText, ENT_COMPAT | ENT_HTML5, $strEncoding);
     }
