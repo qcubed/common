@@ -51,6 +51,7 @@ $a["const"]["QCubed\\QDateTime::Rfc1036"] = "QCubed\\QDateTime::RFC1036";
 $a["const"]["QCubed\\QDateTime::Rfc1123"] = "QCubed\\QDateTime::RFC1123";
 $a["const"]["QCubed\\QDateTime::Rfc2822"] = "QCubed\\QDateTime::RFC2822";
 $a["const"]["QCubed\\QDateTime::Rfc3339"] = "QCubed\\QDateTime::RFC3339";
+$a["const"]["QCubed\\QDateTime::Rfc3339Extended"] = "QCubed\\QDateTime::RFC3339_EXTENDED";
 $a["const"]["QCubed\\QDateTime::Rss"] = "QCubed\\QDateTime::RSS";
 $a["const"]["QCubed\\QDateTime::W3c"] = "QCubed\\QDateTime::W3C";
 $a["class"]['QString'] = '\\QCubed\\QString';
