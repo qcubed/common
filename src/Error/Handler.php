@@ -30,7 +30,7 @@ class Handler
     {
         if (!$func) {
             // No Error Handling is wanted -- simulate a "On Error, Resume" type of functionality
-            set_error_handler(['\\QCubed\\Error\\Manager::QCubedHandleError'], 0); // invalidate our default handler
+            set_error_handler('\\QCubed\\Error\\Manager::handleError', 0); // invalidate our default handler
             $this->intStoredErrorLevel = error_reporting(0); // turn off all error reporting
         } else {
             set_error_handler($func, $intLevel);
