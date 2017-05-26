@@ -58,6 +58,6 @@ class Handler
      */
     public function __destruct()
     {
-        $this->restoreErrorHandler();
+        $this->restore();
     }
 }
