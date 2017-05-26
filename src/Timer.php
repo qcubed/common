@@ -15,6 +15,9 @@ use QCubed\Exception\Caller;
  * Timer class can help you lightweight profiling of your applications.
  * Use it to measure how long tasks take.
  *
+ * If you set the QCUBED_TIMER_OUT_FILE define, the output of your timers will automatically be written
+ * to that file after each server access.
+ *
  * @author Ago Luberg
  * @was QTimer
  */

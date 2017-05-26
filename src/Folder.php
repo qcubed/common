@@ -48,9 +48,8 @@ abstract class Folder
                 // Manually CHMOD to $intMode (if applicable)
                 // mkdir doesn't do it for mac, and this will error on windows
                 // Therefore, ignore any errors that creep up
-                ErrorHandler::set(null);
+                $e = new Error\Handler();
                 chmod($strPath, $intMode);
-                ErrorHandler::restore();
             }
         } else {
             $blnReturn = mkdir($strPath, $intMode);
