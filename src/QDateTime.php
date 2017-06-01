@@ -222,10 +222,10 @@ class QDateTime extends \DateTime implements \JsonSerializable, \Serializable
             $this->blnTimeNull = $mixValue->isTimeNull();
             $this->reinforceNullProperties();
         } else {
-            if ($mixValue instanceof QDateTime) {
-                // Subclassing from a PHP QDateTime object
+            if ($mixValue instanceof \DateTime) {
+                // Subclassing from a PHP DateTime object
                 if ($objTimeZone) {
-                    throw new Caller('QDateTime subclassing of a QDateTime object cannot take in a DateTimeZone parameter');
+                    throw new Caller('QDateTime subclassing of a DateTime object cannot take in a DateTimeZone parameter');
                 }
                 parent::__construct($mixValue->format('Y-m-d H:i:s'), $mixValue->getTimezone());
 

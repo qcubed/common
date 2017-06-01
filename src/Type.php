@@ -117,21 +117,21 @@ class Type
     {
         switch ($strType) {
             case Type::OBJECT:
-                return 'Type::OBJECT';
+                return 'QCubed\\Type::OBJECT';
             case Type::STRING:
-                return 'Type::STRING';
+                return 'QCubed\\Type::STRING';
             case Type::INTEGER:
-                return 'Type::INTEGER';
+                return 'QCubed\\Type::INTEGER';
             case Type::FLOAT:
-                return 'Type::FLOAT';
+                return 'QCubed\\Type::FLOAT';
             case Type::BOOLEAN:
-                return 'Type::BOOLEAN';
+                return 'QCubed\\Type::BOOLEAN';
             case Type::ARRAY_TYPE:
-                return 'Type::ARRAY_TYPE';
+                return 'QCubed\\Type::ARRAY_TYPE';
             case Type::RESOURCE:
-                return 'Type::RESOURCE';
+                return 'QCubed\\Type::RESOURCE';
             case Type::DATE_TIME:
-                return 'Type::DATE_TIME';
+                return 'QCubed\\Type::DATE_TIME';
 
             default:
                 // Could not determine type
