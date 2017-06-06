@@ -10,6 +10,7 @@
 namespace QCubed;
 
 use QCubed\Exception\Caller;
+use QCubed\Project\Application;
 
 /**
  * Class QString
@@ -759,7 +760,7 @@ abstract class QString
     {
         // Support the main application class if using a custom encoding
         if (class_exists('\\QCubed\\Project\\Application')) {
-            $strEncoding = \QCubed\Project\Application::encodingType();
+            $strEncoding = Application::encodingType();
         } else {
             $strEncoding = QCUBED_ENCODING;
         }
@@ -784,5 +785,13 @@ abstract class QString
         }
     }
 
-
+    /**
+     * Return true if the string is an integer. False if a float or anything else.
+     *
+     * @param string $strVal
+     * @return bool
+     */
+    public static function isInteger($strVal) {
+        return(ctype_digit(strval($strVal)));
+    }
 }
