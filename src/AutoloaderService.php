@@ -65,6 +65,9 @@ class AutoloaderService
             if (file_exists($strComposerAutoloadPath)) {
                 $this->composerAutoloader = require($strComposerAutoloadPath);
             }
+            else {
+                throw new \Exception('Cannot find composer autoloader');
+            }
         }
 
         // Register our autoloader, making sure we go after the composer autoloader
