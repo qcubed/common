@@ -20,6 +20,9 @@ use QCubed\Project\Application;
  */
 abstract class QString
 {
+    const LETTERS_NUMBERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const LETTERS_NUMBERS_SYMBOLS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}/?><,.;:~';
+
     /**
      * This faux constructor method throws a caller exception.
      * The String object should never be instantiated, and this constructor
@@ -542,7 +545,7 @@ abstract class QString
      */
     public static function getRandomString(
         $intLength,
-        $strCharacterSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        $strCharacterSet = self::LETTERS_NUMBERS
     ) {
         // Cast in case there were something else
         $intLength = Type::cast($intLength, Type::INTEGER);
