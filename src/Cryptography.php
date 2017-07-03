@@ -29,14 +29,17 @@ use QCubed as Q;
  *      contains your encryption key. For example, you can make it a form variable, or a session variable,
  *      making sure your form or session data is secure and
  *    cannot be seen by a user, then when the instance gets unserialized, the IV will be restored automatically.
- *      Storing the instance in a QApplication or global variable will not work, since these things are reinitialized every
+ *      Storing the instance in the Application object or a global variable will not work, since these things are reinitialized every
  *    time PHP starts up, and you will get a different IV at that time. If you do not correctly
  *      restore the IV that was used to Encrypt, then you will not be able to Decrypt.
  *
  * 2) Pass a value to $strIvHashKey in the constructor, and the initialization vector will be appended to the resulting encrypted data.
  *    This hash key SHOULD be a static value that is part of your app and must be passed to the constructor of any instance of
- *      QCryptography that will be used to decrypt the data. This gives you the ability to decrypt the value without needing to save
+ *      Cryptography that will be used to decrypt the data. This gives you the ability to decrypt the value without needing to save
  *      the IV or rely on serialized instance of this class.
+ *
+ *      Note that the IvHashKey is not the Iv, but rather a hash key used to determine whether the Iv has been tampered with.
+ *
  *      Note that appending the IV to the encrypted data does not compromise the encrypted data at all, but it will make the data
  *      larger. If you are doing block-level ciphering and you want the resulting encryption to be the same size as the given data,
  *      you must be aware of that.
@@ -46,14 +49,6 @@ use QCubed as Q;
  */
 class Cryptography extends ObjectBase
 {
-    /**
-     * Constant to indicate that Random IV is to be automatically generated.
-     * To generate a valid random IV, pass it in the class constuctor at the place of IV
-     *
-     * We use a single digit because no cipher algorithm requires an IV of length 1.
-     */
-    const IV_RANDOM = 'R';
-
     /** @var bool Are we going to use Base 64 encoding? */
     protected $blnBase64;
     /** @var string Key to be used for encryption/decryption */
