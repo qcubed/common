@@ -7,8 +7,7 @@ use QCubed\Type;
  * @package Tests
  */
 
-
-class TypeTest extends \QCubed\Test\UnitTestCaseBase
+class TypeCastingTest extends \QCubed\Test\UnitTestCaseBase
 {
     public function testCasting()
     {

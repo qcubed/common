@@ -27,7 +27,8 @@ namespace QCubed\Test;
 
 
 /**
- * HtmlReporter for local test case running.
+ * HtmlReporter for local test case running. Saves the output in to a session variable so that our output displayer
+ * can display it.
  *
  * Class HtmlReporter
  * @package QCubed\Test
@@ -37,6 +38,7 @@ class HtmlReporter extends \PHPUnit_TextUI_ResultPrinter
     protected $results;
     protected $currentSuite;
     protected $currentTest;
+    protected $currentGroup;
 
     public function __construct(
         $out = null,
@@ -46,50 +48,30 @@ class HtmlReporter extends \PHPUnit_TextUI_ResultPrinter
         $columns = 80,
         $reverseList = false
     ) {
-        ob_start(); // start output buffering, so we can send the output to the browser in chunks
-
-        $this->autoFlush = true;
-
         parent::__construct($out, $verbose, $colors, $debug, $columns, $reverseList);
     }
 
 
     public function write($buffer)
     {
-        $buffer = nl2br($buffer);
-
-        $buffer = str_pad($buffer,
-                1024) . "\n"; // pad the string, otherwise the browser will do nothing with the flushed output
-
-        if ($this->out) {
-            fwrite($this->out, $buffer);
-
-            if ($this->autoFlush) {
-                $this->incrementalFlush();
-            }
-        } else {
-            print $buffer;
-
-            if ($this->autoFlush) {
-                $this->incrementalFlush();
-            }
-        }
-    }
-
-    public function incrementalFlush()
-    {
-        if ($this->out) {
-            fflush($this->out);
-        } else {
-            ob_flush(); // flush the buffered output
-            flush();
-        }
+        // noop this
     }
 
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
         $this->currentSuite = $suite->getName();
+        if ($this->currentSuite  &&
+            ($tests = $suite->tests()) &&
+            $tests[0] instanceof \PHPUnit_Framework_TestSuite
+        ) {
+            // is actually a test group
+            $this->currentGroup = $this->currentSuite;
+            $this->currentSuite = null;
+        }
+        elseif ($this->currentGroup) {
+            $this->currentSuite = $this->currentGroup . ':' . $this->currentSuite;
+        }
     }
 
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
@@ -140,10 +122,10 @@ class HtmlReporter extends \PHPUnit_TextUI_ResultPrinter
 
     public function printResult(\PHPUnit_Framework_TestResult $result)
     {
-        echo('<h1>QCubed Unit Tests - PHPUnit ' . \PHPUnit_Runner_Version::id() . '</h1>');
+        $strHtml = '';
 
         foreach ($this->results as $suiteName => $suite) {
-            $strHtml = "<b>$suiteName</b><br />";
+            $strHtml.= "<b>$suiteName</b><br />";
             foreach ($suite as $testName => $test) {
                 $status = $test['status'];
                 $status = ucfirst($status);
@@ -170,12 +152,13 @@ class HtmlReporter extends \PHPUnit_TextUI_ResultPrinter
                     }
                 }
             }
-            echo $strHtml;
         }
 
         $str = "\nRan " . $result->count() . " tests in " . $result->time() . " seconds.\n";
         $str .= $result->failureCount() . " assertions failed.\n";
         $str .= $result->errorCount() . " exceptions were thrown.\n";
-        echo nl2br($str);
+        $strHtml .= nl2br($str);
+
+        $_SESSION['HtmlReporterOutput'] .= $strHtml;
     }
 }
