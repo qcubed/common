@@ -68,6 +68,7 @@ abstract class Folder
      */
     public static function deleteFolder($strPath)
     {
+
         if (!is_dir($strPath)) {
             unlink($strPath);
 
@@ -226,6 +227,37 @@ abstract class Folder
         }
         finally {
             closedir($dir);
+        }
+    }
+
+    /**
+     * Returns the number of items in a directory, whether they are files or other directories. Does not count the
+     * dot and dot-dot items.
+     * @param string $dir
+     * @return int
+     */
+    public static function countItems($dir) {
+        $fi = new \FilesystemIterator($dir, \FilesystemIterator::SKIP_DOTS);
+        return iterator_count($fi);
+    }
+
+    /**
+     * Removes all the items in the given directory, while preserving the directory itself.
+     *
+     * @param string $dir
+     */
+    public static function emptyContents($dir) {
+        $iterator = new \FilesystemIterator($dir, \FilesystemIterator::SKIP_DOTS);
+        if (!$iterator->valid()) {
+            return;
+        }
+        foreach($iterator as $fileinfo) {
+            if ($fileinfo->isDir()) {
+                self::deleteFolder($fileinfo->getPathname());
+            }
+            else {
+                unlink($fileinfo->getPathname());
+            }
         }
     }
 }
