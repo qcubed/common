@@ -247,7 +247,7 @@ abstract class Folder
      * @param string $dir
      */
     public static function emptyContents($dir) {
-        $iterator = new \DirectoryIterator($dir);
+        $iterator = new \FilesystemIterator($dir, \FilesystemIterator::SKIP_DOTS);
         if (!$iterator->valid()) {
             return;
         }
